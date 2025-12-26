@@ -1,21 +1,35 @@
-// Footer year
-document.getElementById("year").textContent = new Date().getFullYear();
-
 // Mobile nav toggle
-const toggle = document.querySelector(".nav-toggle");
-const menu = document.getElementById("nav-menu");
+const toggle = document.querySelector(".hamburger");
+const menu = document.getElementById("mobileMenu");
 
 if (toggle && menu) {
   toggle.addEventListener("click", () => {
-    const open = menu.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", String(open));
+    // Toggle the 'hidden' attribute
+    const isHidden = menu.hasAttribute("hidden");
+    if (isHidden) {
+      menu.removeAttribute("hidden");
+      toggle.setAttribute("aria-expanded", "true");
+    } else {
+      menu.setAttribute("hidden", "");
+      toggle.setAttribute("aria-expanded", "false");
+    }
   });
 
-  // Close menu when clicking a link (for in-page anchors)
-  menu.querySelectorAll("a[href^='#']").forEach((a) => {
+  // Close menu when clicking a link
+  menu.querySelectorAll("a").forEach((a) => {
     a.addEventListener("click", () => {
-      menu.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded", "false");
+        // If it's an anchor on the same page, we want to close.
+        // If it's a new page, the page reloads, so it closes anyway.
+        // Strictly speaking, we only need to close if we don't navigate away,
+        // but creating a "flash" of closing before nav is fine/better.
+        menu.setAttribute("hidden", "");
+        toggle.setAttribute("aria-expanded", "false");
     });
   });
+}
+
+// Footer year (optional, only if element exists)
+const yearSpan = document.getElementById("year");
+if (yearSpan) {
+  yearSpan.textContent = new Date().getFullYear();
 }

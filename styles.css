@@ -1,4 +1,4 @@
-@font-face{
+@font-face {
   font-family: "Handwriting-Regular";
   src:
     url("assets/fonts/Handwriting-Regular.woff2") format("woff2"),
@@ -9,67 +9,102 @@
   font-display: swap;
 }
 
-:root{
+:root {
+  /* Colors */
   --brown: #553c3e;
-  --text: rgba(255,255,255,0.92);
-  --muted: rgba(255,255,255,0.72);
-  --faint: rgba(255,255,255,0.55);
-  /* withjoy color #553c3e; */
-  --max: 760px;
-  --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.72);
+  --faint: rgba(255, 255, 255, 0.55);
 
-  /* Replace this with your custom font name later */
+  /* Layout */
+  --max: 760px;
+
+  /* Fonts */
+  --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   --display: "Bungee", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
-*{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; }
-body{
+/* -------------------------------------------------------------------------- */
+/*                                    RESET                                   */
+/* -------------------------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   margin: 0;
   font-family: var(--sans);
   background: var(--brown);
   color: var(--text);
 }
 
-.body{
+/* -------------------------------------------------------------------------- */
+/*                                 TYPOGRAPHY                                 */
+/* -------------------------------------------------------------------------- */
+
+.body {
   font-family: "Handwriting-Regular", var(--sans);
   font-size: 18px;
   line-height: 1.85;
   letter-spacing: 0.01em;
+  color: var(--muted);
+  margin: 0 0 22px 0;
 }
 
-@media (max-width: 640px){
-  .body{
-    font-size: 17px;
-    line-height: 1.8;
-  }
+.headline {
+  font-size: 28px;
+  margin: 0 0 10px 0;
 }
 
-/* One-page vertical "panels" */
-.snap{
-  scroll-snap-type: y proximity; /* key: makes it feel like pages */
-  height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
+.subhead {
+  font-size: 20px;
+  color: var(--muted);
+  margin: 0 0 30px 0;
 }
-.panel{
+
+.section-title {
+  font-family: var(--display);
+  letter-spacing: 0.14em;
+  margin: 0 0 34px 0;
+  font-size: 34px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.note {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 auto;
+  max-width: 520px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   LAYOUT                                   */
+/* -------------------------------------------------------------------------- */
+
+.panel {
   min-height: 100vh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
-/* HERO */
-.hero{
+/* Hero Section */
+.hero {
   position: relative;
   background: #000;
 }
-.hero-img{
+
+.hero-img {
   width: 100%;
   height: 100vh;
   object-fit: cover;
   display: block;
 }
-.hero-titlewrap{
+
+.hero-titlewrap {
   position: absolute;
   inset: 0;
   display: flex;
@@ -77,7 +112,8 @@ body{
   justify-content: center;
   padding-bottom: 12vh;
 }
-.display{
+
+.display {
   font-family: var(--display);
   font-size: clamp(56px, 8vw, 110px);
   letter-spacing: 0.08em;
@@ -86,87 +122,26 @@ body{
   margin: 0;
 }
 
-/* SOLID sections */
-.solid{
+/* Content Sections */
+.solid {
   background: var(--brown);
   display: grid;
   place-items: center;
   padding: 72px 18px;
 }
 
-/* Optional media image at top (like story/schedule) */
-.media{
-  width: min(980px, 92vw);
-  margin: 0 auto 44px auto;
-}
-.media img{
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.story-media{
-  max-width: 560px;
-  width: 100%;
-  margin: 22px auto 28px auto;
-}
-
-.story-media img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 0;              /* WithJoy style: squared */
-}
-
-/* Two images side-by-side on desktop, stacked on mobile */
-.story-media.two-up{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-/* STORY: left-aligned narrative, centered section title */
-#story .content{
-  text-align: left;
-}
-
-#story .section-title{
-  text-align: center;
-}
-
-#story .body{
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (max-width: 640px){
-  .story-media.two-up{
-    grid-template-columns: 1fr;
-  }
-}
-
-#story .body{
-  max-width: 560px;
-}
-
-/* Centered content column */
-.content{
+.content {
   width: min(var(--max), 92vw);
   margin: 0 auto;
   text-align: center;
 }
 
-.headline{
-  font-size: 28px;
-  margin: 0 0 10px 0;
-}
-.subhead{
-  font-size: 20px;
-  color: var(--muted);
-  margin: 0 0 30px 0;
-}
+/* -------------------------------------------------------------------------- */
+/*                                 COMPONENTS                                 */
+/* -------------------------------------------------------------------------- */
 
-.btn-outline{
+/* Buttons */
+.btn-outline {
   display: inline-block;
   border: 1px solid var(--faint);
   color: var(--muted);
@@ -177,112 +152,45 @@ body{
   font-size: 13px;
   margin-bottom: 26px;
 }
-.btn-outline:hover{
+
+.btn-outline:hover {
   border-color: var(--text);
   color: var(--text);
 }
 
-.note{
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 0 auto;
-  max-width: 520px;
-}
-
-.section-title{
-  font-family: var(--display);
-  letter-spacing: 0.14em;
-  margin: 0 0 34px 0;
-  font-size: 34px;
-  color: rgba(255,255,255,0.78);
-}
-
-.body{
-  color: var(--muted);
-  line-height: 1.8;
-  font-size: 15px;
-  margin: 0 0 22px 0;
-}
-
-/* Schedule blocks */
-.dateblock{
-  margin-top: 26px;
-}
-.date{
-  margin: 0;
-  color: var(--text);
-  font-size: 18px;
-}
-.rule{
-  height: 1px;
-  background: var(--faint);
-  margin: 22px 0;
-}
-
-.event{
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 18px;
-  text-align: left;
-  align-items: start;
-  margin: 0 auto 26px auto;
-}
-.event-left{
-  color: var(--muted);
-  font-size: 14px;
-  padding-top: 4px;
-}
-.event-title{
-  font-size: 18px;
-  color: var(--text);
-  margin-bottom: 10px;
-}
-.event-meta{
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 10px;
-}
-.event-links{
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-.link{
-  color: var(--muted);
-  font-size: 13px;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  opacity: 0.9;
-}
-
-/* Top nav (desktop) */
-.topnav{
+/* Navigation - Desktop */
+.topnav {
   position: fixed;
   top: 18px;
   left: 0;
   right: 0;
   z-index: 50;
   display: none;
+  /* Hidden on mobile by default */
   justify-content: center;
   pointer-events: none;
 }
-.navlinks{
+
+.navlinks {
   pointer-events: auto;
   display: flex;
   gap: 26px;
   font-size: 13px;
   letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.70);
+  color: rgba(255, 255, 255, 0.70);
 }
-.navlinks a{
+
+.navlinks a {
   color: inherit;
   text-decoration: none;
 }
-.navlinks a:hover{ color: rgba(255,255,255,0.92); }
 
-/* Mobile hamburger */
-.hamburger{
+.navlinks a:hover {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Mobile Hamburger */
+.hamburger {
   position: fixed;
   top: 18px;
   left: 18px;
@@ -291,54 +199,186 @@ body{
   height: 44px;
   border-radius: 14px;
   border: none;
-  background: rgba(90,69,67,0.85);
+  background: rgba(90, 69, 67, 0.85);
   display: grid;
   place-items: center;
 }
-.hamburger span{
+
+.hamburger span {
   width: 18px;
   height: 2px;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   display: block;
   margin: 2px 0;
 }
-.mobile-menu{
+
+.mobile-menu {
   position: fixed;
   top: 70px;
   left: 18px;
   z-index: 60;
-  background: rgba(90,69,67,0.96);
-  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(90, 69, 67, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   padding: 10px;
   display: grid;
   gap: 8px;
 }
-.mobile-menu a{
-  color: rgba(255,255,255,0.86);
+
+.mobile-menu a {
+  color: rgba(255, 255, 255, 0.86);
   text-decoration: none;
   padding: 10px 12px;
   border-radius: 12px;
 }
-.mobile-menu a:hover{
-  background: rgba(255,255,255,0.08);
+
+.mobile-menu a:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* Show desktop nav on wider screens; hide hamburger menu */
-@media (min-width: 900px){
-  .topnav{ display: flex; }
-  .hamburger, .mobile-menu{ display: none !important; }
+/* -------------------------------------------------------------------------- */
+/*                                PAGE SPECIFIC                               */
+/* -------------------------------------------------------------------------- */
+
+/* Story */
+.story-content {
+  text-align: left;
 }
 
-/* Make schedule single-column on small screens (like WithJoy) */
-@media (max-width: 640px){
-  .event{ grid-template-columns: 1fr; text-align: center; }
-  .event-links{ justify-content: center; }
-  .event-left{ padding-top: 0; }
-}
-
-#story .body{
+.story-content .body {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 24px;
   line-height: 1.3;
   letter-spacing: 0.03em;
+}
+
+.story-media {
+  max-width: 560px;
+  width: 100%;
+  margin: 22px auto 28px auto;
+}
+
+.story-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0;
+}
+
+.story-media.two-up {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Schedule */
+.dateblock {
+  margin-top: 26px;
+}
+
+.date {
+  margin: 0;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.rule {
+  height: 1px;
+  background: var(--faint);
+  margin: 22px 0;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  text-align: left;
+  align-items: start;
+  margin: 0 auto 26px auto;
+}
+
+.event-left {
+  color: var(--muted);
+  font-size: 14px;
+  padding-top: 4px;
+}
+
+.event-title {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.event-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.event-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.link {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  opacity: 0.9;
+}
+
+/* Media Utility (images) */
+.media {
+  width: min(980px, 92vw);
+  margin: 0 auto 44px auto;
+}
+
+.media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                RESPONSIVE                                  */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 900px) {
+  .topnav {
+    display: flex;
+  }
+
+  .hamburger,
+  .mobile-menu {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .body {
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .story-media.two-up {
+    grid-template-columns: 1fr;
+  }
+
+  /* Schedule mobile: single column */
+  .event {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .event-links {
+    justify-content: center;
+  }
+
+  .event-left {
+    padding-top: 0;
+  }
 }

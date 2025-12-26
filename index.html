@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,37 +8,38 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- Desktop nav (like WithJoy: subtle, top-center) -->
+  <!-- Desktop nav -->
   <header class="topnav">
     <nav class="navlinks" aria-label="Primary">
-      <a href="#home">Home</a>
+      <a href="index.html">Home</a>
       <a href="#rsvp">RSVP</a>
-      <a href="#story">Story</a>
-      <a href="#schedule">Schedule</a>
-      <a href="#moments">Moments</a>
+      <a href="story.html">Story</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="moments.html">Moments</a>
     </nav>
   </header>
 
-  <!-- Mobile hamburger (overlay on hero, like screenshots) -->
+  <!-- Mobile hamburger -->
   <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
     <span></span><span></span><span></span>
   </button>
 
   <div id="mobileMenu" class="mobile-menu" hidden>
-    <a href="#home">Home</a>
+    <a href="index.html">Home</a>
     <a href="#rsvp">RSVP</a>
-    <a href="#story">Story</a>
-    <a href="#schedule">Schedule</a>
-    <a href="#moments">Moments</a>
+    <a href="story.html">Story</a>
+    <a href="schedule.html">Schedule</a>
+    <a href="moments.html">Moments</a>
   </div>
 
-  <main class="snap">
+  <main>
     <!-- HOME: full-bleed image with big title -->
     <section id="home" class="panel hero">
       <img class="hero-img" src="assets/hero.jpg" alt="" />
@@ -52,9 +54,7 @@
         <p class="headline">November 21, 2026 - November 22, 2026</p>
         <p class="subhead">Candolim</p>
 
-        <a class="btn-outline"
-           href="https://withjoy.com/jayant-and-anjali/rsvp"
-           target="_blank" rel="noopener">
+        <a class="btn-outline" href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">
           RSVP
         </a>
 
@@ -63,115 +63,9 @@
         </p>
       </div>
     </section>
-
-    <!-- STORY: image + title + centered paragraphs -->
-    <section id="story" class="panel solid">
-      <div class="media">
-        <img src="assets/story.jpg" alt="" />
-      </div>
-      <div class="content">
-        <h2 class="section-title">STORY</h2>
-
-        <p class="body">
-          Their paths first crossed as undergrads in the US, Anjali living an artistic life in Brooklyn, Jayant being an engineering nerd in upstate New York. They would meet occasionally, when Jayant was transiting through NYC or when the fellowship supporting their  education would hold its annual conference. They became fast friends, but never more. 
-        </p>
-        <figure class="story-media">
-          <img src="assets/story-01.jpg" alt="Anjali and Jayant at ____" loading="lazy" />
-        </figure>
-        <p class="body">
-          Conversations and meetings were few and far between after undergrad. Anjali hit the hustle of the design consultant world, chugging coffee, jet setting across the world. Jayant moved to the West Coast,  still studying and also chugging coffee but the hipstery, funky kind.
-        </p>
-        
-        <p class="body">
-          The fateful reconnection is a tale as old as the modern European summer fling. Jayant was living and working in Berlin when he got a message from Anjali who was planning a 3 month visit to Berlin to meet her colleagues that lived there. They spent most of that summer together, on a whirlwind adventure, full of train rides across Europe, Jayant ferrying Anjali on cargo bikes, and yes, a couple of romantic nights in Paris where they first kissed.
-        </p>
-        <figure class="story-media two-up">
-          <img src="assets/story-02.jpg" alt="____" loading="lazy" />
-          <img src="assets/story-03.jpg" alt="____" loading="lazy" />
-        </figure>
-        <p class="body">
-          But the magical summer ended and gave way to two years of a long distance relationship as Anjali returned to NYC and Jayant continued his life in Berlin. They would find ways to see each other in-person every few months, including a magical couple of weeks in Goa - the inspiration for this wedding's location.
-        </p>
-        <figure class="story-media two-up">
-          <img src="assets/story-04.jpg" alt="____" loading="lazy" />
-          <img src="assets/story-05.jpg" alt="____" loading="lazy" />
-        </figure>
-        <p class="body">
-          They were finally reunited when Jayant moved back to the US and they found their first apartment together - a sunlit, corner apartment, in a lovely little neighborhood in Brooklyn. Before long, they realized that this was truly for forever and here we are!
-        </p>
-        <figure class="story-media">
-          <img src="assets/story-06.jpg" alt="Anjali and Jayant at ____" loading="lazy" />
-        </figure>
-      </div>
-    </section>
-
-    <!-- SCHEDULE: image + title + date blocks -->
-    <section id="schedule" class="panel solid">
-      <div class="media">
-        <img src="assets/schedule.jpg" alt="" />
-      </div>
-
-      <div class="content">
-        <h2 class="section-title">SCHEDULE</h2>
-
-        <div class="dateblock">
-          <p class="date">Saturday November 21, 2026</p>
-          <div class="rule"></div>
-
-          <div class="event">
-            <div class="event-left">4:00 PM to 10:00 PM</div>
-            <div class="event-right">
-              <div class="event-title">Sangeet and Game Night</div>
-              <div class="event-links">
-                <a href="#" class="link">Add to Calendar</a>
-                <a href="#" class="link">Where to Stay</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="dateblock">
-          <p class="date">Sunday November 22, 2026</p>
-          <div class="rule"></div>
-
-          <div class="event">
-            <div class="event-left">10:00 AM</div>
-            <div class="event-right">
-              <div class="event-title">Wedding</div>
-              <div class="event-meta">Seattle Japanese Garden, Lake Washington Blvd E, Seattle</div>
-              <div class="event-links">
-                <a href="#" class="link">Add to Calendar</a>
-                <a href="#" class="link">Where to Stay</a>
-                <a href="#" class="link">Directions</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="event">
-            <div class="event-left">7:30 PM</div>
-            <div class="event-right">
-              <div class="event-title">Reception</div>
-              <div class="event-meta">Reception Dinner</div>
-              <div class="event-links">
-                <a href="#" class="link">Add to Calendar</a>
-                <a href="#" class="link">Where to Stay</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- MOMENTS: placeholder -->
-    <section id="moments" class="panel solid">
-      <div class="content">
-        <h2 class="section-title">MOMENTS</h2>
-        <p class="note">Photo gallery coming soon.</p>
-      </div>
-    </section>
   </main>
 
   <script src="script.js"></script>
 </body>
+
 </html>

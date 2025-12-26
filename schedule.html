@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Schedule - Anjali & Jayant</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <header class="topnav">
+        <nav class="navlinks" aria-label="Primary">
+            <a href="index.html">Home</a>
+            <a href="index.html#rsvp">RSVP</a>
+            <a href="story.html">Story</a>
+            <a href="schedule.html">Schedule</a>
+            <a href="moments.html">Moments</a>
+        </nav>
+    </header>
+
+    <!-- Mobile hamburger -->
+    <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div id="mobileMenu" class="mobile-menu" hidden>
+        <a href="index.html">Home</a>
+        <a href="index.html#rsvp">RSVP</a>
+        <a href="story.html">Story</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="moments.html">Moments</a>
+    </div>
+
+    <main>
+        <!-- HERO -->
+        <section class="panel hero">
+            <img class="hero-img" src="assets/hero.jpg" alt="" />
+            <div class="hero-titlewrap">
+                <h1 class="display">SCHEDULE</h1>
+            </div>
+        </section>
+
+        <!-- CONTENT -->
+        <section class="panel solid">
+            <div class="content">
+                <div class="dateblock">
+                    <p class="date">Saturday November 21, 2026</p>
+                    <div class="rule"></div>
+
+                    <div class="event">
+                        <div class="event-left">4:00 PM to 10:00 PM</div>
+                        <div class="event-right">
+                            <div class="event-title">Sangeet and Game Night</div>
+                            <div class="event-links">
+                                <a href="#" class="link">Add to Calendar</a>
+                                <a href="#" class="link">Where to Stay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dateblock">
+                    <p class="date">Sunday November 22, 2026</p>
+                    <div class="rule"></div>
+
+                    <div class="event">
+                        <div class="event-left">10:00 AM</div>
+                        <div class="event-right">
+                            <div class="event-title">Wedding</div>
+                            <div class="event-meta">Seattle Japanese Garden, Lake Washington Blvd E, Seattle</div>
+                            <div class="event-links">
+                                <a href="#" class="link">Add to Calendar</a>
+                                <a href="#" class="link">Where to Stay</a>
+                                <a href="#" class="link">Directions</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event">
+                        <div class="event-left">7:30 PM</div>
+                        <div class="event-right">
+                            <div class="event-title">Reception</div>
+                            <div class="event-meta">Reception Dinner</div>
+                            <div class="event-links">
+                                <a href="#" class="link">Add to Calendar</a>
+                                <a href="#" class="link">Where to Stay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
