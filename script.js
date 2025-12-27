@@ -18,12 +18,12 @@ if (toggle && menu) {
   // Close menu when clicking a link
   menu.querySelectorAll("a").forEach((a) => {
     a.addEventListener("click", () => {
-        // If it's an anchor on the same page, we want to close.
-        // If it's a new page, the page reloads, so it closes anyway.
-        // Strictly speaking, we only need to close if we don't navigate away,
-        // but creating a "flash" of closing before nav is fine/better.
-        menu.setAttribute("hidden", "");
-        toggle.setAttribute("aria-expanded", "false");
+      // If it's an anchor on the same page, we want to close.
+      // If it's a new page, the page reloads, so it closes anyway.
+      // Strictly speaking, we only need to close if we don't navigate away,
+      // but creating a "flash" of closing before nav is fine/better.
+      menu.setAttribute("hidden", "");
+      toggle.setAttribute("aria-expanded", "false");
     });
   });
 }
@@ -32,4 +32,16 @@ if (toggle && menu) {
 const yearSpan = document.getElementById("year");
 if (yearSpan) {
   yearSpan.textContent = new Date().getFullYear();
+}
+
+// Gallery rendering
+const galleryContainer = document.getElementById("gallery");
+if (galleryContainer && window.galleryImages) {
+  window.galleryImages.forEach((imageSrc) => {
+    const img = document.createElement("img");
+    img.src = imageSrc;
+    img.loading = "lazy";
+    img.alt = "Wedding Moment";
+    galleryContainer.appendChild(img);
+  });
 }
