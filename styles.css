@@ -201,8 +201,13 @@ body {
   border-radius: 14px;
   border: none;
   background: rgba(90, 69, 67, 0.85);
-  display: grid;
-  place-items: center;
+  display: flex;
+  /* Changed from grid to flex for better control */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  /* Controls space between lines */
 }
 
 .hamburger span {
@@ -210,7 +215,8 @@ body {
   height: 2px;
   background: rgba(255, 255, 255, 0.85);
   display: block;
-  margin: 2px 0;
+  margin: 0;
+  /* Removing margin, using gap instead */
 }
 
 .mobile-menu {
@@ -224,6 +230,11 @@ body {
   padding: 10px;
   display: grid;
   gap: 8px;
+}
+
+/* Ensure hidden attribute is respected */
+.mobile-menu[hidden] {
+  display: none;
 }
 
 .mobile-menu a {
