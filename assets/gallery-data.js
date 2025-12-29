@@ -17,7 +17,6 @@ window.galleryImages = [
   "assets/gallery/IMG_2726.png",
   "assets/gallery/IMG_3482.jpg",
   "assets/gallery/IMG_3663.jpg",
-  "assets/gallery/IMG_4911.jpg",
   "assets/gallery/IMG_4965.jpg",
   "assets/gallery/IMG_5225.jpg",
   "assets/gallery/IMG_6295.jpg",
