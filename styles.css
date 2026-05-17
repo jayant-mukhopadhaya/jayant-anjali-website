@@ -1,3 +1,31 @@
+/* ============================================================
+   FONTS — Akke (local)
+   ============================================================ */
+
+@font-face {
+  font-family: "Akke-Poster";
+  src: url("assets/fonts/Akke-Trial/static/Akke-PosterBigBlack.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Akke-Text";
+  src: url("assets/fonts/Akke-Trial/static/Akke-TextRegular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Akke-Text";
+  src: url("assets/fonts/Akke-Trial/static/Akke-TextLight.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Handwriting-Regular";
   src:
@@ -9,128 +37,169 @@
   font-display: swap;
 }
 
+/* ============================================================
+   TOKENS
+   ============================================================ */
+
 :root {
-  /* Colors */
-  --brown: #553c3e;
-  --off-white: #E8DED2;
-  --highlight: #f5f1b8;
-  /* --text: #553c3e; */
-  --text: rgba(255, 255, 255, 0.92);
-  --muted: rgba(255, 255, 255, 0.72);
-  --faint: rgba(255, 255, 255, 0.55);
+  /* Palette — warm cream ground */
+  --cream:      #f9f8da;
+  --cream-alt:  #ede9c0;
+  --brown:      #553c3e;
+  --brown-dark: #2e1c1e;
+  --brown-mid:  #7a5658;
+
+  /* Semantic */
+  --bg:     var(--cream);
+  --text:   #2e1c1e;
+  --muted:  rgba(46, 28, 30, 0.58);
+  --faint:  rgba(46, 28, 30, 0.18);
+  --accent: #553c3e;
 
   /* Layout */
-  --max: 760px;
+  --max: 720px;
 
-  /* Fonts */
-  --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  --display: "Bungee", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  /* Type — Plus Jakarta Sans from Google for all titles/headings/UI */
+  /*         Akke-Text for body prose, Akke-Poster for the home logotype only */
+  --font-sans:    "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: "Akke-Text", serif;
+  --font-body:    "Akke-Text", serif;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                    RESET                                   */
-/* -------------------------------------------------------------------------- */
+/* ============================================================
+   RESET
+   ============================================================ */
 
-* {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: var(--sans);
-  background: var(--brown);
+  font-family: var(--font-body);
+  background: var(--bg);
   color: var(--text);
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                 TYPOGRAPHY                                 */
-/* -------------------------------------------------------------------------- */
+img { display: block; max-width: 100%; }
 
-.body {
-  font-family: var(--sans);
-  font-size: 18px;
-  line-height: 1.85;
-  letter-spacing: 0.01em;
+/* ============================================================
+   FLOATING MOTIFS  (multiply blend — beautiful on cream)
+   ============================================================ */
+
+.motifs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+  opacity: 0;                     /* JS fades this in on load */
+  transition: opacity 1.4s ease;  /* overridden to 0.3s during scroll */
+}
+
+.motif {
+  position: absolute;
+  opacity: 0.38;
+  mix-blend-mode: multiply;
+  transform: rotate(var(--r, 0deg));  /* static rotation, no animation */
+}
+
+/* ============================================================
+   PAGE HEADER  (replaces photo hero across all non-moments pages)
+   ============================================================ */
+
+.page-header {
+  position: relative;
+  z-index: 3;
+  min-height: 54vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 120px 24px 56px;
+  background: var(--cream);
+  text-align: center;
+}
+
+/* Taller version for the home page */
+.page-header--home {
+  min-height: 88vh;
+  justify-content: center;
+  padding: 140px 24px 80px;
+  gap: 0;
+}
+
+.page-header-motif {
+  width: 150px;
+  height: auto;
+  margin-bottom: 22px;
+  opacity: 0.72;
+  mix-blend-mode: multiply;
+}
+
+.page-header--home .page-header-motif {
+  width: 200px;
+  margin-bottom: 28px;
+}
+
+/* Compact variant — story and other content-first pages */
+.page-header--compact {
+  min-height: 36vh;
+  padding: 110px 24px 28px;
+}
+
+.page-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(36px, 7vw, 72px);
+  letter-spacing: -0.02em;
+  color: var(--brown-dark);
+  margin: 0;
+  line-height: 1.05;
+}
+
+/* Home page gets the Akke logotype treatment */
+.page-title--logotype {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 100px);
+  letter-spacing: 0.04em;
+  color: var(--brown-dark);
+}
+
+.page-header-sub {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: clamp(13px, 1.8vw, 16px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 22px 0;
+  margin: 14px 0 0 0;
 }
 
-.headline {
-  font-size: 28px;
-  margin: 0 0 10px 0;
+.page-header-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--faint);
+  border: none;
+  margin: 28px auto 0;
 }
 
-.subhead {
-  font-size: 20px;
-  color: var(--muted);
-  margin: 0 0 30px 0;
-}
-
-.section-title {
-  font-family: var(--display);
-  letter-spacing: 0.14em;
-  margin: 0 0 34px 0;
-  font-size: 34px;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.note {
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 0 auto;
-  max-width: 520px;
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                   LAYOUT                                   */
-/* -------------------------------------------------------------------------- */
+/* ============================================================
+   LAYOUT
+   ============================================================ */
 
 .panel {
-  min-height: 100vh;
-}
-
-/* Hero Section */
-.hero {
   position: relative;
-  background: #000;
+  z-index: 3;
+  background: var(--cream);
 }
 
-.hero-img {
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
-  display: block;
+.section {
+  padding: 72px 24px;
 }
 
-.hero-titlewrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 12vh;
-}
-
-.display {
-  font-family: var(--display);
-  font-size: clamp(56px, 8vw, 110px);
-  letter-spacing: 0.08em;
-  color: #f5f1b8;
-  text-align: center;
-  margin: 0;
-}
-
-/* Content Sections */
-.solid {
-  background: var(--brown);
-  display: grid;
-  place-items: center;
-  padding: 72px 18px;
+.section--alt {
+  background: var(--cream-alt);
 }
 
 .content {
@@ -139,320 +208,828 @@ body {
   text-align: center;
 }
 
-/* RSVP Specific */
-#rsvp .headline,
-#rsvp .subhead,
-#rsvp .note,
-#rsvp .btn-outline {
-  color: var(--highlight);
+.content--left {
+  text-align: left;
 }
 
-#rsvp .btn-outline {
-  border-color: var(--highlight);
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+/* Section headings */
+.section-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(22px, 3.2vw, 30px);
+  letter-spacing: -0.01em;
+  color: var(--brown-dark);
+  margin: 0 0 28px 0;
 }
 
-#rsvp .btn-outline:hover {
-  color: rgba(255, 255, 255, 0.92);
-  border-color: rgba(255, 255, 255, 0.92);
+/* Sub-section labels */
+.label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                 COMPONENTS                                 */
-/* -------------------------------------------------------------------------- */
+/* Body prose */
+.body {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.95;
+  letter-spacing: 0.01em;
+  color: rgba(46, 28, 30, 0.72);
+  margin: 0 0 22px 0;
+}
 
-/* Buttons */
+.headline {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(20px, 2.5vw, 26px);
+  letter-spacing: -0.01em;
+  color: var(--brown-dark);
+  margin: 0 0 8px 0;
+}
+
+.subhead {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--muted);
+  margin: 0 0 24px 0;
+}
+
+.note {
+  font-family: var(--font-body);
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 0 auto;
+  max-width: 480px;
+}
+
+/* Thin decorative rule */
+.rule {
+  width: 40px;
+  height: 1px;
+  background: var(--faint);
+  border: none;
+  margin: 0 auto 28px;
+}
+
+.rule--left {
+  margin-left: 0;
+}
+
+/* ============================================================
+   RSVP (home page section)
+   ============================================================ */
+
+#rsvp {
+  background: var(--cream-alt);
+}
+
+.rsvp-date {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 60px);
+  letter-spacing: -0.02em;
+  color: var(--brown-dark);
+  margin: 0 0 6px 0;
+  line-height: 1.1;
+}
+
+.rsvp-location {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 30px 0;
+}
+
+.rsvp-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--faint);
+  border: none;
+  margin: 0 auto 26px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
 .btn-outline {
   display: inline-block;
-  border: 1px solid var(--faint);
-  color: var(--muted);
+  border: 1.5px solid rgba(46, 28, 30, 0.35);
+  color: var(--brown-dark);
   border-radius: 999px;
-  padding: 10px 28px;
+  padding: 11px 32px;
   text-decoration: none;
-  letter-spacing: 0.10em;
-  font-size: 13px;
-  margin-bottom: 26px;
-  margin-top: 24px;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 18px;
+  transition: border-color 0.22s, background 0.22s, color 0.22s;
 }
 
 .btn-outline:hover {
-  border-color: var(--text);
-  color: var(--text);
+  background: var(--brown-dark);
+  border-color: var(--brown-dark);
+  color: var(--cream);
 }
 
-/* Navigation - Desktop */
+/* ============================================================
+   NAVIGATION — DESKTOP (light theme)
+   ============================================================ */
+
 .topnav {
   position: fixed;
-  top: 0px;
+  top: 0;
   left: 0;
   right: 0;
   z-index: 50;
   display: none;
-  padding: 16px;
-  /* Hidden on mobile by default */
+  padding: 16px 28px;
   justify-content: center;
   pointer-events: none;
-  background: var(--brown);
+  background: rgba(249, 248, 218, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--faint);
 }
 
 .navlinks {
   pointer-events: auto;
   display: flex;
-  gap: 26px;
-  font-size: 16px;
-  letter-spacing: 0.04em;
-  color: #f5f1b8;
+  gap: 22px;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .navlinks a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 .navlinks a:hover {
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--brown-dark);
 }
 
-/* Mobile Hamburger */
+.navlinks a.nav-rsvp {
+  font-weight: 700;
+  color: var(--brown-dark);
+  border: 1.5px solid var(--faint);
+  border-radius: 999px;
+  padding: 5px 14px;
+  letter-spacing: 0.12em;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.navlinks a.nav-rsvp:hover {
+  background: var(--brown-dark);
+  border-color: var(--brown-dark);
+  color: var(--cream);
+}
+
+/* Dark nav variant — for moments page (dark slideshow background) */
+[data-nav="dark"] .topnav {
+  background: rgba(20, 10, 12, 0.72);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+[data-nav="dark"] .navlinks {
+  color: rgba(249, 248, 218, 0.7);
+}
+[data-nav="dark"] .navlinks a:hover {
+  color: var(--cream);
+}
+[data-nav="dark"] .navlinks a.nav-rsvp {
+  color: var(--cream);
+  border-color: rgba(249,248,218,0.4);
+}
+[data-nav="dark"] .navlinks a.nav-rsvp:hover {
+  background: var(--cream);
+  color: var(--brown-dark);
+}
+
+/* ============================================================
+   NAVIGATION — MOBILE
+   ============================================================ */
+
 .hamburger {
   position: fixed;
-  top: 18px;
-  left: 18px;
+  top: 16px;
+  left: 16px;
   z-index: 60;
   width: 44px;
   height: 44px;
-  border-radius: 14px;
+  border-radius: 12px;
   border: none;
-  background: rgba(90, 69, 67, 0.85);
+  background: rgba(249, 248, 218, 0.9);
+  border: 1px solid var(--faint);
   display: flex;
-  /* Changed from grid to flex for better control */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 4px;
-  /* Controls space between lines */
+  gap: 5px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
 }
 
 .hamburger span {
   width: 18px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.85);
+  height: 1.5px;
+  background: var(--brown-dark);
   display: block;
-  margin: 0;
-  /* Removing margin, using gap instead */
+  border-radius: 2px;
 }
 
 .mobile-menu {
   position: fixed;
-  top: 70px;
-  left: 18px;
+  top: 68px;
+  left: 16px;
   z-index: 60;
-  background: rgba(90, 69, 67, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(249, 248, 218, 0.97);
+  border: 1px solid var(--faint);
   border-radius: 16px;
   padding: 10px;
   display: grid;
-  gap: 8px;
+  gap: 2px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* Ensure hidden attribute is respected */
-.mobile-menu[hidden] {
-  display: none;
-}
+.mobile-menu[hidden] { display: none; }
 
 .mobile-menu a {
-  color: rgba(255, 255, 255, 0.86);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
   text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 12px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  transition: background 0.16s, color 0.16s;
 }
 
-.mobile-menu a:hover {
-  background: rgba(255, 255, 255, 0.08);
+.mobile-menu a:hover,
+.mobile-menu a:active {
+  background: var(--faint);
+  color: var(--brown-dark);
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                PAGE SPECIFIC                               */
-/* -------------------------------------------------------------------------- */
-
-/* Story */
-.story-panel {
-  background: var(--off-white);
-  color: var(--brown);
+[data-nav="dark"] .hamburger {
+  background: rgba(20, 10, 12, 0.82);
+  border-color: rgba(255,255,255,0.1);
+}
+[data-nav="dark"] .hamburger span {
+  background: rgba(249, 248, 218, 0.9);
 }
 
-.story-panel .body {
-  color: var(--brown);
+/* ============================================================
+   SCROLL FADE-IN  (addresses interactivity critique)
+   ============================================================ */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
 }
+
+.fade-in.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   STORY PAGE
+   ============================================================ */
 
 .story-content {
+  width: min(660px, 92vw);
+  margin: 0 auto;
+  padding: 60px 0 80px;
   text-align: left;
 }
 
 .story-content .body {
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 14px;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
+  font-size: 17px;
+  line-height: 2;
+  letter-spacing: 0.015em;
+  color: rgba(46, 28, 30, 0.72);
+  margin-bottom: 28px;
+}
+
+.story-drop-cap::first-letter {
+  font-family: var(--font-display);
+  font-size: 5em;
+  line-height: 0.72;
+  float: left;
+  margin: 0.1em 0.12em 0 0;
+  color: var(--brown);
+}
+
+.story-chapter-mark {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 11vw, 110px);
+  color: var(--brown);
+  opacity: 0.07;
+  line-height: 1;
+  margin: 0 0 -26px 0;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.story-rule {
+  width: 36px;
+  height: 1.5px;
+  background: var(--faint);
+  border: none;
+  margin: 36px 0;
 }
 
 .story-media {
-  max-width: 640px;
-  width: 100%;
-  margin: 22px auto 28px auto;
+  margin: 30px 0 34px 0;
 }
 
 .story-media img {
   width: 100%;
   height: auto;
-  display: block;
-  border-radius: 0;
+  border-radius: 3px;
 }
 
 .story-media.two-up {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 10px;
 }
 
-/* Schedule */
-.dateblock {
-  margin-top: 26px;
-}
+/* ============================================================
+   SCHEDULE PAGE
+   ============================================================ */
 
-.date {
-  margin: 0;
-  color: var(--text);
-  font-size: 18px;
-}
-
-.rule {
-  height: 1px;
-  background: var(--faint);
-  margin: 22px 0;
-}
-
-.event {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 18px;
+.schedule-content {
+  width: min(var(--max), 92vw);
+  margin: 0 auto;
   text-align: left;
-  align-items: start;
-  margin: 0 auto 26px auto;
 }
 
-.event-left {
+.schedule-date-group {
+  margin-bottom: 52px;
+}
+
+.schedule-date-label {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: -0.01em;
+  color: var(--brown-dark);
+  margin: 0 0 18px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--faint);
+}
+
+.schedule-event {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.schedule-event-body {
+  padding-left: 20px;
+  border-left: 1.5px solid var(--faint);
+  position: relative;
+}
+
+.schedule-event-body::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brown);
+  opacity: 0.6;
+}
+
+.schedule-time {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 12px;
   color: var(--muted);
-  font-size: 14px;
-  padding-top: 4px;
+  text-align: right;
+  padding-top: 6px;
+  letter-spacing: 0.04em;
 }
 
-.event-title {
+.schedule-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
   font-size: 18px;
-  color: var(--text);
-  margin-bottom: 10px;
+  color: var(--brown-dark);
+  margin: 0 0 4px 0;
 }
 
-.event-meta {
+.schedule-meta {
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
+  line-height: 1.5;
 }
 
-.event-links {
+.schedule-links {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .link {
+  font-family: var(--font-sans);
+  font-weight: 500;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   text-decoration: underline;
   text-underline-offset: 4px;
-  opacity: 0.9;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
 }
 
-/* Media Utility (images) */
-.media {
-  width: min(980px, 92vw);
-  margin: 0 auto 44px auto;
+.link:hover { color: var(--brown-dark); }
+
+/* ============================================================
+   GUIDE LINKS  (schedule page PDF downloads)
+   ============================================================ */
+
+.guide-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
 }
 
-.media img {
+.guide-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  max-width: 420px;
+}
+
+.guide-link:hover {
+  background: rgba(46, 28, 30, 0.04);
+  border-color: rgba(46, 28, 30, 0.3);
+}
+
+.guide-link-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(46, 28, 30, 0.06);
+  border-radius: 8px;
+}
+
+.guide-link-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--brown-dark);
+  margin: 0 0 2px 0;
+}
+
+.guide-link-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.guide-link-arrow {
+  margin-left: auto;
+  font-size: 16px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   TRAVEL PAGE
+   ============================================================ */
+
+.travel-section {
+  padding: 64px 24px;
+}
+
+.travel-section + .travel-section {
+  border-top: 1px solid var(--faint);
+}
+
+.travel-section--alt {
+  background: var(--cream-alt);
+}
+
+.travel-content {
+  width: min(var(--max), 92vw);
+  margin: 0 auto;
+}
+
+.travel-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.travel-card {
+  background: rgba(46, 28, 30, 0.04);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 22px 20px;
+}
+
+.travel-card-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--brown-dark);
+  margin: 0 0 6px 0;
+}
+
+.travel-card-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ============================================================
+   REGISTRY PAGE
+   ============================================================ */
+
+.registry-section {
+  padding: 72px 24px;
+}
+
+.registry-content {
+  width: min(600px, 92vw);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.registry-links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 32px;
+  align-items: center;
+}
+
+.registry-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  height: auto;
-  display: block;
+  max-width: 420px;
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                GALLERY                                     */
-/* -------------------------------------------------------------------------- */
+.registry-link-row:hover {
+  background: rgba(46, 28, 30, 0.04);
+  border-color: rgba(46, 28, 30, 0.3);
+}
+
+.registry-link-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--brown-dark);
+}
+
+.registry-link-arrow {
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   FAQ PAGE
+   ============================================================ */
+
+.faq-content {
+  width: min(620px, 92vw);
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--faint);
+}
+
+.faq-item:first-of-type {
+  border-top: 1px solid var(--faint);
+}
+
+.faq-item summary {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--brown-dark);
+  padding: 20px 0;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: color 0.2s;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item summary::after {
+  content: "+";
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+
+.faq-item[open] summary {
+  color: var(--brown);
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.85;
+  padding: 0 0 22px 0;
+  max-width: 560px;
+}
+
+/* ============================================================
+   SLIDESHOW  (moments page)
+   ============================================================ */
+
+.slideshow-wrap {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #0a0506;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.slideshow-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 2.2s ease-in-out;
+  will-change: opacity;
+}
+
+.slideshow-img.active { opacity: 1; }
+
+.slideshow-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,5,6,0.28) 0%,
+    transparent 28%,
+    transparent 62%,
+    rgba(10,5,6,0.55) 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+.slideshow-title {
+  position: absolute;
+  bottom: 12vh;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.slideshow-title .page-title {
+  color: #f9f8da;
+  font-size: clamp(36px, 7vw, 72px);
+}
+
+.slideshow-dots {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 7;
+}
+
+.slideshow-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(249, 248, 218, 0.3);
+  cursor: pointer;
+  transition: background 0.4s, transform 0.3s;
+  border: none;
+  padding: 0;
+}
+
+.slideshow-dot.active {
+  background: #f9f8da;
+  transform: scale(1.5);
+}
+
+/* ============================================================
+   GALLERY (legacy fallback)
+   ============================================================ */
 
 .gallery {
   width: min(1200px, 94vw);
   margin: 0 auto;
   column-count: 3;
-  column-gap: 16px;
+  column-gap: 14px;
 }
 
 .gallery img {
   width: 100%;
   display: block;
-  margin-bottom: 16px;
-  /* Padding between stacked items */
-  border-radius: 4px;
+  margin-bottom: 14px;
+  border-radius: 3px;
   break-inside: avoid;
-  /* Prevent breaking inside an image */
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                RESPONSIVE                                  */
-/* -------------------------------------------------------------------------- */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 
 @media (min-width: 900px) {
-  .topnav {
-    display: flex;
-  }
-
+  .topnav  { display: flex; }
   .hamburger,
-  .mobile-menu {
-    display: none !important;
-  }
+  .mobile-menu { display: none !important; }
 }
 
 @media (max-width: 900px) {
-  .gallery {
-    column-count: 2;
-  }
+  .gallery { column-count: 2; }
+  .travel-cards { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
-  .body {
-    font-size: 17px;
-    line-height: 1.8;
-  }
-
-  .story-media.two-up {
+  .body { font-size: 16px; line-height: 1.85; }
+  .story-media.two-up { grid-template-columns: 1fr; }
+  .schedule-event {
     grid-template-columns: 1fr;
+    gap: 4px;
   }
-
-  /* Schedule mobile: single column */
-  .event {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .event-links {
-    justify-content: center;
-  }
-
-  .event-left {
-    padding-top: 0;
-  }
-
-  .gallery {
-    column-count: 1;
-  }
+  .schedule-time { text-align: left; padding-top: 0; }
+  .schedule-event-body { border-left: none; padding-left: 0; }
+  .schedule-event-body::before { display: none; }
+  .gallery { column-count: 1; }
+  .page-header { min-height: 44vh; padding-top: 90px; }
+  .page-header--home { min-height: 80vh; }
 }
