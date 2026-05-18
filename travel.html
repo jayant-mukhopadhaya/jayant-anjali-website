@@ -42,6 +42,7 @@
     <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP</a>
   </div>
 
+  <div class="page-frame">
   <main>
 
     <section class="page-header fade-in">
@@ -56,41 +57,97 @@
         <p class="label">Getting There</p>
         <h2 class="section-title">Flights</h2>
         <p class="body">
-          The first event kicks off at <strong>2:00 PM on Saturday, November 21st</strong>. To give yourself time to settle in, we recommend landing by late morning — aim for no later than 11:00 AM. Most domestic hubs have morning flights that easily make that window. If you're coming from abroad, we'd strongly suggest arriving the evening of Friday the 20th to start the weekend relaxed.
+          The first event kicks off at <strong>2:00 PM on Saturday, November 21st</strong>. To give yourself time to settle in, we recommend landing no later than <strong>10:00 AM</strong>. Most domestic hubs have morning flights that easily make that window. If you're coming from abroad, we'd strongly suggest arriving the evening of Friday the 20th to start the weekend relaxed.
         </p>
         <p class="body" style="margin-top:16px;">
           We'd love for you to make a holiday of it — come for a week! Goa in November is absolutely gorgeous and we'll have plenty of recommendations for things to do.
         </p>
 
-        <div class="travel-cards" style="margin-top:32px;">
-          <div class="travel-card fade-in" style="transition-delay:0.05s;">
-            <p class="travel-card-title">Which Airport?</p>
-            <p class="travel-card-body">
-              Goa has two airports: <strong>Dabolim (GOI)</strong> — the older, more established airport in South Goa — and <strong>Mopa (GOX)</strong> — the newer terminal in North Goa, closer to the venue. We recommend flying into <strong>GOX</strong> if your airline serves it. GOI is perfectly fine too; it's about 45–60 min from the venue depending on where you're staying.
-            </p>
+        <!-- International first, then airport info — horizontal cards -->
+        <div class="travel-cards--horizontal" style="margin-top:32px;">
+
+          <div class="travel-card--h fade-in">
+            <div class="travel-card--h-label">
+              <p class="label">For</p>
+              <p class="travel-card-title">International Guests</p>
+            </div>
+            <div class="travel-card--h-body">
+              <p class="travel-card-body">
+                Route through <strong>Mumbai (BOM)</strong>, <strong>Delhi (DEL)</strong>, <strong>Bengaluru (BLR)</strong>, or <strong>Chennai (MAA)</strong> for the best connections. We'd recommend avoiding Middle East stopover hubs given the current situation. Arriving on Friday the 20th is the safest bet — you'll skip the rush and have time to explore.
+              </p>
+            </div>
           </div>
-          <div class="travel-card fade-in" style="transition-delay:0.12s;">
-            <p class="travel-card-title">Morning Connections</p>
-            <p class="travel-card-body">
-              From <strong>Mumbai (BOM)</strong>: flights take ~1 hour — a 9:00 AM departure gets you there comfortably. From <strong>Delhi (DEL)</strong>: ~2.5 hours — aim for a 7:00–8:00 AM departure. From <strong>Bengaluru (BLR)</strong> or <strong>Chennai (MAA)</strong>: ~1–1.5 hours — morning options are plentiful. Airlines include IndiGo, Air India, Akasa, and SpiceJet.
-            </p>
+
+          <div class="travel-card--h fade-in">
+            <div class="travel-card--h-label">
+              <p class="label">To</p>
+              <p class="travel-card-title">Which Airport?</p>
+            </div>
+            <div class="travel-card--h-body">
+              <p class="travel-card-body">
+                Goa has two airports: <strong>Mopa (GOX)</strong> — the newer terminal in North Goa, closer to the venue — and <strong>Dabolim (GOI)</strong> — the older, more established airport in South Goa. We recommend flying into <strong>GOX</strong> if your airline serves it. GOI is perfectly fine too; it's about 45–60 min from the venue.
+              </p>
+            </div>
           </div>
-          <div class="travel-card fade-in" style="transition-delay:0.19s;">
-            <p class="travel-card-title">International Guests</p>
-            <p class="travel-card-body">
-              Route through <strong>Mumbai (BOM)</strong>, <strong>Delhi (DEL)</strong>, <strong>Bengaluru (BLR)</strong>, or <strong>Chennai (MAA)</strong> for the best connections. We'd recommend avoiding Middle East stopover hubs given the current situation. Arriving on Friday the 20th is the safest bet — you'll skip the rush and have time to explore.
-            </p>
-          </div>
+
         </div>
+
+        <!-- Domestic flight options table -->
+        <p class="label" style="margin-top:40px;">Domestic Connections</p>
+        <div class="flight-table-wrap">
+          <table class="flight-table">
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>Recommended Departure</th>
+                <th>Approx. Flight Time</th>
+                <th>Airlines</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Bengaluru <span class="flight-code">BLR</span></td>
+                <td>8:00–9:00 AM</td>
+                <td>~1 hr</td>
+                <td>IndiGo, Air India, Akasa</td>
+              </tr>
+              <tr>
+                <td>Chennai <span class="flight-code">MAA</span></td>
+                <td>8:00–9:00 AM</td>
+                <td>~1.5 hrs</td>
+                <td>IndiGo, Air India</td>
+              </tr>
+              <tr>
+                <td>Delhi <span class="flight-code">DEL</span></td>
+                <td>7:00–8:00 AM</td>
+                <td>~2.5 hrs</td>
+                <td>IndiGo, Air India, SpiceJet</td>
+              </tr>
+              <tr>
+                <td>Mumbai <span class="flight-code">BOM</span></td>
+                <td>8:30–9:30 AM</td>
+                <td>~1 hr</td>
+                <td>IndiGo, Air India, Akasa</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </section>
 
     <!-- STAY -->
-    <section class="travel-section panel section--alt fade-in">
+    <section class="travel-section panel travel-section--alt fade-in">
       <div class="travel-content">
         <p class="label">Where to Stay</p>
         <h2 class="section-title">Accommodation</h2>
+
         <p class="body">
+          The wedding takes place at <strong>Aashyana Lakhanpal</strong>, a stunning heritage property in North Goa.
+          <a href="https://www.google.com/maps/search/?api=1&query=Aashyana+Lakhanpal+Goa" target="_blank" rel="noopener" class="link">View on Google Maps →</a>
+        </p>
+
+        <p class="body" style="margin-top:16px;">
           We are in the process of securing a block of rooms at a hotel very close to the venue — we'll share rates and booking details as soon as they're confirmed. Watch this space.
         </p>
         <p class="body" style="margin-top:16px;">
@@ -114,6 +171,71 @@
             <p class="travel-card-title">South Goa</p>
             <p class="travel-card-body">
               If you're extending the trip, South Goa offers a completely different pace — quieter, lusher, with long stretches of largely empty beach. Palolem, Colva, and Benaulim are beautiful for a few extra days of unwinding. About 45–60 min from the venue.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXTENDED STAY -->
+    <section class="travel-section panel fade-in">
+      <div class="travel-content">
+        <p class="label">If You're Staying On</p>
+        <h2 class="section-title">Extended Stay</h2>
+        <p class="body">
+          We'd love for you to make a holiday of it. Goa in November is truly special — warm, dry, and full of life. We've curated two vibes depending on what you're after.
+        </p>
+
+        <div class="travel-cards" style="margin-top:32px;">
+          <div class="travel-card fade-in" style="transition-delay:0.05s;">
+            <p class="travel-card-title">Activity Focused — North Goa</p>
+            <p class="travel-card-body">
+              Water sports, beach hopping, Saturday night markets, and a buzzing food and drink scene. Great for those who want to keep moving. We'll share our curated guide below — more details coming soon.
+            </p>
+          </div>
+          <div class="travel-card fade-in" style="transition-delay:0.12s;">
+            <p class="travel-card-title">Quiet &amp; Relaxed — South Goa</p>
+            <p class="travel-card-body">
+              Long stretches of empty beach, yoga retreats, ayurvedic spas, and lush countryside. The perfect reset after the celebrations. Palolem and Agonda are particularly beautiful. More details coming soon.
+            </p>
+          </div>
+        </div>
+
+        <!-- North Goa guide placeholder -->
+        <div class="guide-links">
+          <a class="guide-link" href="#" onclick="return false;" aria-label="North Goa guide coming soon">
+            <div class="guide-link-icon">📄</div>
+            <div>
+              <p class="guide-link-name">North Goa Guide</p>
+              <p class="guide-link-desc">Food, drink &amp; activities — coming soon</p>
+            </div>
+            <span class="guide-link-arrow">→</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GETTING AROUND -->
+    <section class="travel-section panel travel-section--alt fade-in">
+      <div class="travel-content">
+        <p class="label">On the Ground</p>
+        <h2 class="section-title">Getting Around</h2>
+        <p class="body">
+          There's no Uber or Ola in Goa — but getting around is straightforward with a little planning. We'll help coordinate options for our guests, so don't worry about figuring this out alone.
+        </p>
+
+        <div class="travel-cards" style="margin-top:32px;">
+          <div class="travel-card fade-in" style="transition-delay:0.05s;">
+            <p class="travel-card-title">Rental Car or Scooter</p>
+            <p class="travel-card-body">
+              The most flexible way to explore at your own pace. We'll share trusted rental contacts for both cars and scooters — ideal for the adventurous. <em>Contact details coming soon.</em>
+            </p>
+          </div>
+          <div class="travel-card fade-in" style="transition-delay:0.12s;">
+            <p class="travel-card-title">Hire a Driver</p>
+            <p class="travel-card-body">
+              Prefer to sit back and enjoy the ride? We'll provide contacts for reliable local drivers who can be hired by the day or half-day. <em>Contact details coming soon.</em>
             </p>
           </div>
         </div>
@@ -156,6 +278,7 @@
     </section>
 
   </main>
+  </div><!-- /.page-frame -->
 
   <script src="script.js"></script>
 </body>

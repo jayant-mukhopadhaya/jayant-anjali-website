@@ -57,7 +57,7 @@
   --accent: #553c3e;
 
   /* Layout */
-  --max: 720px;
+  --max: 800px;
 
   /* Type — Plus Jakarta Sans from Google for all titles/headings/UI */
   /*         Akke-Text for body prose, Akke-Poster for the home logotype only */
@@ -82,6 +82,35 @@ body {
 }
 
 img { display: block; max-width: 100%; }
+
+/* ============================================================
+   PAGE FRAME — Bandhani tile border that scrolls with the page.
+   The frame wraps <main> on every page.
+   Left, right, and bottom borders are CSS background layers drawn
+   in the padding area (children don't cover padding).
+   Top border uses ::before so it can be offset below the fixed nav.
+   ============================================================ */
+
+.page-frame {
+  position: relative;
+  padding: 0 50px;
+  background-color: transparent;
+  background-image:
+    url("Indian Motif Exports/Bandhani border_vertical.png"),
+    url("Indian Motif Exports/Bandhani border_vertical.png");
+  background-position: left 8px top, right 8px top;
+  background-size: 34px 58px;
+  background-repeat: repeat-y, repeat-y;
+}
+
+@media (max-width: 900px) {
+  /* ~75% of desktop: 26×44px tile, 6px gaps, 38px total padding per side */
+  .page-frame {
+    padding: 0 38px;
+    background-position: left 6px top, right 6px top;
+    background-size: 26px 44px;
+  }
+}
 
 /* ============================================================
    FLOATING MOTIFS  (multiply blend — beautiful on cream)
@@ -203,7 +232,7 @@ img { display: block; max-width: 100%; }
 }
 
 .content {
-  width: min(var(--max), 92vw);
+  width: min(var(--max), 100%);
   margin: 0 auto;
   text-align: center;
 }
@@ -525,9 +554,9 @@ img { display: block; max-width: 100%; }
    ============================================================ */
 
 .story-content {
-  width: min(660px, 92vw);
+  width: min(660px, 100%);
   margin: 0 auto;
-  padding: 60px 0 80px;
+  padding: 24px 0 80px;
   text-align: left;
 }
 
@@ -589,7 +618,7 @@ img { display: block; max-width: 100%; }
    ============================================================ */
 
 .schedule-content {
-  width: min(var(--max), 92vw);
+  width: min(var(--max), 100%);
   margin: 0 auto;
   text-align: left;
 }
@@ -749,16 +778,14 @@ img { display: block; max-width: 100%; }
   padding: 64px 24px;
 }
 
-.travel-section + .travel-section {
-  border-top: 1px solid var(--faint);
-}
+/* border between travel sections removed — color alternation provides separation */
 
 .travel-section--alt {
   background: var(--cream-alt);
 }
 
 .travel-content {
-  width: min(var(--max), 92vw);
+  width: min(var(--max), 100%);
   margin: 0 auto;
 }
 
@@ -793,6 +820,113 @@ img { display: block; max-width: 100%; }
 }
 
 /* ============================================================
+   HORIZONTAL TRAVEL CARDS  (full-width row layout)
+   ============================================================ */
+
+.travel-cards--horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.travel-card--h {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0;
+  background: rgba(46, 28, 30, 0.04);
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.travel-card--h-label {
+  padding: 22px 20px;
+  border-right: 1px solid var(--faint);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.travel-card--h-label .label {
+  margin: 0 0 4px 0;
+}
+
+.travel-card--h-label .travel-card-title {
+  font-size: 16px;
+  margin: 0;
+}
+
+.travel-card--h-body {
+  padding: 22px 24px;
+}
+
+@media (max-width: 640px) {
+  .travel-card--h {
+    grid-template-columns: 1fr;
+  }
+  .travel-card--h-label {
+    border-right: none;
+    border-bottom: 1px solid var(--faint);
+    padding: 16px 20px;
+  }
+}
+
+/* ============================================================
+   FLIGHT TABLE
+   ============================================================ */
+
+.flight-table-wrap {
+  margin-top: 32px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.flight-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+}
+
+.flight-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1.5px solid var(--faint);
+  white-space: nowrap;
+}
+
+.flight-table td {
+  font-size: 14px;
+  color: var(--text);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--faint);
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.flight-table tr:last-child td {
+  border-bottom: none;
+}
+
+.flight-table td:first-child {
+  font-weight: 600;
+  color: var(--brown-dark);
+  white-space: nowrap;
+}
+
+.flight-table td .flight-code {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+  display: block;
+}
+
+/* ============================================================
    REGISTRY PAGE
    ============================================================ */
 
@@ -801,7 +935,7 @@ img { display: block; max-width: 100%; }
 }
 
 .registry-content {
-  width: min(600px, 92vw);
+  width: min(600px, 100%);
   margin: 0 auto;
   text-align: center;
 }
@@ -849,7 +983,7 @@ img { display: block; max-width: 100%; }
    ============================================================ */
 
 .faq-content {
-  width: min(620px, 92vw);
+  width: min(620px, 100%);
   margin: 0 auto;
 }
 
