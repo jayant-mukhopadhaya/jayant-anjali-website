@@ -13,14 +13,12 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
+<body data-page="home">
 
   <header class="topnav">
     <nav class="navlinks" aria-label="Primary">
-      <a href="index.html">Home</a>
-      <a href="story.html">Our Story</a>
-      <a href="schedule.html">Schedule</a>
-      <a href="travel.html">Travel & Stay</a>
+      <a href="index.html" class="is-current">Home</a>
+      <a href="plan.html">Plan Your Trip</a>
       <a href="moments.html">Moments</a>
       <a href="registry.html">Registry</a>
       <a href="faqs.html">FAQs</a>
@@ -33,24 +31,49 @@
   </button>
   <div id="mobileMenu" class="mobile-menu" hidden>
     <a href="index.html">Home</a>
-    <a href="story.html">Our Story</a>
-    <a href="schedule.html">Schedule</a>
-    <a href="travel.html">Travel & Stay</a>
+    <a href="plan.html">Plan Your Trip</a>
     <a href="moments.html">Moments</a>
     <a href="registry.html">Registry</a>
     <a href="faqs.html">FAQs</a>
     <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP</a>
   </div>
 
+  <!-- Cursor-following leopard (desktop only) -->
+  <div class="cursor-leopard" aria-hidden="true">
+    <img src="Indian Motif Exports/Leopard_1.png" alt="">
+  </div>
+
   <div class="page-frame">
   <main>
-    <!-- Single full-viewport section: motif + names -->
     <section class="page-header page-header--home fade-in">
       <img class="page-header-motif" src="Indian Motif Exports/Flowers.png" alt="">
       <h1 class="page-title page-title--logotype">JAYANT &amp; ANJALI</h1>
       <p class="page-header-sub">November 21–22, 2026 &nbsp;·&nbsp; Goa, India</p>
       <hr class="page-header-rule">
-      <a href="https://www.google.com/maps/search/?api=1&query=Aashyana+Lakhanpal+Goa" target="_blank" rel="noopener" style="font-family:var(--font-sans);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;margin-top:18px;display:inline-block;transition:color 0.2s;" onmouseover="this.style.color='var(--brown-dark)'" onmouseout="this.style.color='var(--muted)'">Aashyana Lakhanpal &nbsp;→</a>
+
+      <div class="countdown" id="countdown" aria-label="Time until the wedding" role="timer">
+        <div class="countdown-unit">
+          <span class="countdown-value" data-cd="days">0</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-value" data-cd="hours">00</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-value" data-cd="minutes">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-unit">
+          <span class="countdown-value" data-cd="seconds">00</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+
+      <div class="hero-ctas">
+        <a class="btn btn--secondary" href="plan.html">Plan Your Trip</a>
+        <a class="btn btn--primary" href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP</a>
+      </div>
     </section>
   </main>
   </div><!-- /.page-frame -->

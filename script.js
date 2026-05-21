@@ -98,6 +98,95 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
 }
 
 // ============================================================
+// Countdown to the wedding — Nov 21, 2026 14:00 IST (UTC+5:30)
+// Renders D / H / M / S into [data-cd="..."] cells.
+// ============================================================
+(function () {
+  var root = document.getElementById('countdown');
+  if (!root) return;
+
+  // 2026-11-21 14:00:00 IST = 08:30:00 UTC
+  var TARGET = Date.UTC(2026, 10, 21, 8, 30, 0);
+
+  var cells = {
+    days:    root.querySelector('[data-cd="days"]'),
+    hours:   root.querySelector('[data-cd="hours"]'),
+    minutes: root.querySelector('[data-cd="minutes"]'),
+    seconds: root.querySelector('[data-cd="seconds"]')
+  };
+
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function tick() {
+    var diff = TARGET - Date.now();
+    if (diff < 0) diff = 0;
+    var s = Math.floor(diff / 1000);
+    var days  = Math.floor(s / 86400);
+    var hours = Math.floor((s % 86400) / 3600);
+    var mins  = Math.floor((s % 3600) / 60);
+    var secs  = s % 60;
+    if (cells.days)    cells.days.textContent    = String(days);
+    if (cells.hours)   cells.hours.textContent   = pad(hours);
+    if (cells.minutes) cells.minutes.textContent = pad(mins);
+    if (cells.seconds) {
+      // Snap to gold (transition: 0ms) BEFORE the new digit paints,
+      // then remove the class on the next frame so the 0.7s ease back to brown begins.
+      cells.seconds.classList.add('countdown-value--pulse');
+      cells.seconds.textContent = pad(secs);
+      requestAnimationFrame(function () {
+        cells.seconds.classList.remove('countdown-value--pulse');
+      });
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// ============================================================
+// Cursor-following leopard (home page only, fine pointers)
+// ============================================================
+(function () {
+  var leopard = document.querySelector('.cursor-leopard');
+  if (!leopard) return;
+  // Skip on touch / coarse pointers
+  if (window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+    return;
+  }
+  // Honor reduced motion
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  var mouseX = window.innerWidth / 2;
+  var mouseY = window.innerHeight / 2;
+  var x = mouseX, y = mouseY;
+  var visible = false;
+
+  window.addEventListener('mousemove', function (e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!visible) {
+      visible = true;
+      leopard.classList.add('is-visible');
+    }
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', function () {
+    visible = false;
+    leopard.classList.remove('is-visible');
+  });
+
+  function animate() {
+    x += (mouseX - x) * 0.06;
+    y += (mouseY - y) * 0.06;
+    leopard.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ============================================================
 // Gallery rendering (legacy — moments page uses slideshow)
 // ============================================================
 const galleryContainer = document.getElementById("gallery");

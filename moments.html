@@ -6,22 +6,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="robots" content="noindex, nofollow">
   <script src="auth.js"></script>
-  <title>Moments — Jayant & Anjali</title>
+  <title>Moments · Jayant &amp; Anjali</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body data-nav="dark">
+<body data-nav="dark" data-page="moments">
 
   <header class="topnav">
     <nav class="navlinks" aria-label="Primary">
       <a href="index.html">Home</a>
-      <a href="story.html">Our Story</a>
-      <a href="schedule.html">Schedule</a>
-      <a href="travel.html">Travel & Stay</a>
-      <a href="moments.html">Moments</a>
+      <a href="plan.html">Plan Your Trip</a>
+      <a href="moments.html" class="is-current">Moments</a>
       <a href="registry.html">Registry</a>
       <a href="faqs.html">FAQs</a>
       <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener" class="nav-rsvp">RSVP</a>
@@ -33,29 +31,28 @@
   </button>
   <div id="mobileMenu" class="mobile-menu" hidden>
     <a href="index.html">Home</a>
-    <a href="story.html">Our Story</a>
-    <a href="schedule.html">Schedule</a>
-    <a href="travel.html">Travel & Stay</a>
+    <a href="plan.html">Plan Your Trip</a>
     <a href="moments.html">Moments</a>
     <a href="registry.html">Registry</a>
     <a href="faqs.html">FAQs</a>
     <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP</a>
   </div>
 
-  <main>
+  <main class="moments-stage">
     <div class="slideshow-wrap" id="slideshow">
       <div class="slideshow-overlay"></div>
       <div class="slideshow-title">
         <h1 class="page-title">Moments</h1>
       </div>
-      <div class="slideshow-dots" id="slideshowDots"></div>
+    </div>
+    <div class="slideshow-thumbs">
+      <div class="slideshow-thumbs-track" id="slideshowThumbs"></div>
     </div>
   </main>
 
   <script src="assets/gallery-data.js"></script>
   <script>
     (function () {
-      // Fisher-Yates shuffle
       function shuffle(arr) {
         var a = arr.slice();
         for (var i = a.length - 1; i > 0; i--) {
@@ -65,15 +62,15 @@
         return a;
       }
 
-      var images = shuffle(window.galleryImages || []);
-      var wrap   = document.getElementById('slideshow');
-      var dotsEl = document.getElementById('slideshowDots');
+      var images   = shuffle(window.galleryImages || []);
+      var wrap     = document.getElementById('slideshow');
+      var thumbsEl = document.getElementById('slideshowThumbs');
       if (!wrap || images.length === 0) return;
 
       var overlay = wrap.querySelector('.slideshow-overlay');
 
       var imgEls = images.map(function (src, i) {
-        var img      = document.createElement('img');
+        var img       = document.createElement('img');
         img.className = 'slideshow-img';
         img.src       = src;
         img.alt       = 'Jayant & Anjali';
@@ -82,16 +79,19 @@
         return img;
       });
 
-      var dotEls = images.map(function (_, i) {
+      var thumbEls = images.map(function (src, i) {
         var btn = document.createElement('button');
-        btn.className = 'slideshow-dot';
-        btn.setAttribute('aria-label', 'Slide ' + (i + 1));
+        btn.className = 'slideshow-thumb';
+        btn.setAttribute('aria-label', 'Show photo ' + (i + 1));
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.loading = i < 8 ? 'eager' : 'lazy';
+        btn.appendChild(img);
         btn.addEventListener('click', function () { goTo(i); resetTimer(); });
-        dotsEl.appendChild(btn);
+        thumbsEl.appendChild(btn);
         return btn;
       });
-
-      if (images.length > 20) dotsEl.style.display = 'none';
 
       var current  = 0;
       var CYCLE_MS = 7000;
@@ -99,16 +99,24 @@
 
       function goTo(index) {
         imgEls[current].classList.remove('active');
-        if (dotEls[current]) dotEls[current].classList.remove('active');
+        if (thumbEls[current]) thumbEls[current].classList.remove('active');
         current = ((index % images.length) + images.length) % images.length;
         imgEls[current].classList.add('active');
-        if (dotEls[current]) dotEls[current].classList.add('active');
+        if (thumbEls[current]) {
+          thumbEls[current].classList.add('active');
+          // Keep the active thumbnail in view
+          thumbEls[current].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
       }
 
       function resetTimer() {
         clearInterval(timer);
         timer = setInterval(function () { goTo(current + 1); }, CYCLE_MS);
       }
+
+      // Pause on hover over the slideshow itself
+      wrap.addEventListener('mouseenter', function () { clearInterval(timer); });
+      wrap.addEventListener('mouseleave', function () { resetTimer(); });
 
       goTo(0);
       resetTimer();
