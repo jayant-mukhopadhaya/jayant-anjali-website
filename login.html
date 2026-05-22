@@ -5,92 +5,64 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="robots" content="noindex, nofollow">
-    <title>Login - Jayant & Anjali</title>
+    <title>Welcome · Jayant &amp; Anjali</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@300;400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <link rel="icon" type="image/png" href="Indian Motif Exports/Lion_1.png">
     <link rel="stylesheet" href="styles.css" />
-    <style>
-        /* Specific overrides for login page centering */
-        .login-container {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            padding: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        input {
-            padding: 10px;
-            border-radius: 4px;
-            border: none;
-            font-family: var(--sans);
-        }
-
-        button {
-            padding: 10px 20px;
-            border-radius: 4px;
-            border: none;
-            background: #f5f1b8;
-            color: #553c3e;
-            cursor: pointer;
-            font-family: var(--sans);
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #fff;
-        }
-
-        .error {
-            color: #ffaaaa;
-            margin-top: 10px;
-            font-size: 14px;
-            display: none;
-        }
-    </style>
 </head>
 
 <body>
-    <section class="panel hero">
-        <!-- reusing styling for consistency -->
-        <img class="hero-img" src="assets/hero.jpg" alt="" style="filter: brightness(0.4);" />
+    <main class="login-stage">
+        <div class="login-card">
+            <img class="login-motif" src="Indian Motif Exports/Flowers.png" alt="">
+            <h1 class="login-title">JAYANT &amp; ANJALI</h1>
+            <p class="login-sub">November 21–22, 2026 &nbsp;·&nbsp; Goa, India</p>
 
-        <div class="login-container">
-            <h1 class="display" style="font-size: 40px; margin-bottom: 20px;">Welcome</h1>
-            <p style="color: rgba(255,255,255,0.8);">Please enter the password to view the site.</p>
-
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Password"
-                    onkeydown="if(event.key==='Enter') checkPassword()">
-                <button onclick="checkPassword()">Enter</button>
-            </div>
-            <p id="error" class="error">Incorrect password</p>
+            <form id="loginForm" class="login-form" autocomplete="off">
+                <label class="login-field">
+                    <span>Your name</span>
+                    <input type="text" id="guestName" placeholder="So we can say hello" required>
+                </label>
+                <label class="login-field">
+                    <span>Password</span>
+                    <input type="password" id="password" placeholder="From your invitation" required>
+                </label>
+                <button type="submit" class="btn btn--primary login-submit">Enter</button>
+                <p id="error" class="login-error">Incorrect password. Please try again.</p>
+            </form>
         </div>
-    </section>
+    </main>
 
     <script>
-        function checkPassword() {
-            const pass = document.getElementById('password').value;
-            if (pass === 'kokumsoda') {
-                sessionStorage.setItem('wedding_auth', 'true');
-                window.location.href = 'index.html';
-            } else {
-                document.getElementById('error').style.display = 'block';
+        (function () {
+            var form  = document.getElementById('loginForm');
+            var name  = document.getElementById('guestName');
+            var pass  = document.getElementById('password');
+            var error = document.getElementById('error');
+
+            function submit() {
+                error.style.display = 'none';
+                if (pass.value === 'kokumsoda') {
+                    sessionStorage.setItem('wedding_auth', 'true');
+                    var first = (name.value || '').trim().split(/\s+/)[0];
+                    if (first) sessionStorage.setItem('wedding_guest_name', first);
+                    window.location.href = 'index.html';
+                } else {
+                    error.style.display = 'block';
+                    pass.focus();
+                    pass.select();
+                }
             }
-        }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                submit();
+            });
+        })();
     </script>
 </body>
 

@@ -314,11 +314,35 @@ img { display: block; max-width: 100%; }
   margin-top: 12px;
 }
 
+.countdown-tz {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 18px 0 0 0;
+  opacity: 0.7;
+}
+
+/* Day-of and post-event states */
+.countdown-message {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.4vw, 34px);
+  letter-spacing: 0.02em;
+  color: var(--terracotta);
+  margin: 40px auto 0;
+  max-width: 540px;
+  line-height: 1.3;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .countdown { gap: 0; margin-top: 30px; }
   .countdown-unit { min-width: 0; padding: 0 12px; }
   .countdown-value { font-size: clamp(28px, 9vw, 44px); }
   .countdown-label { font-size: 9px; letter-spacing: 0.18em; }
+  .countdown-tz { font-size: 9px; letter-spacing: 0.14em; }
 }
 
 /* ============================================================
@@ -372,6 +396,301 @@ img { display: block; max-width: 100%; }
   transform: translateY(-1px);
 }
 
+/* Add-to-Calendar link sits just under the hero CTAs */
+.add-to-calendar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 4px 6px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.add-to-calendar:hover {
+  color: var(--brown-dark);
+}
+
+.add-to-calendar svg {
+  display: block;
+  opacity: 0.85;
+}
+
+/* ============================================================
+   PAGE TOC  (sticky horizontal pill — used on plan page at all widths)
+   ============================================================ */
+
+.page-toc {
+  position: sticky;
+  top: 0;
+  z-index: 18;
+  width: min(var(--max), calc(100% - 48px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(249, 248, 218, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--faint);
+  border-radius: 999px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page-toc::-webkit-scrollbar { display: none; }
+
+/* Push below the fixed topnav on desktop so the sticky offset matches the nav */
+@media (min-width: 900px) {
+  .page-toc { top: 57px; }
+}
+
+.page-toc-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+  padding-right: 4px;
+  border-right: 1px solid var(--faint);
+  margin-right: 6px;
+}
+
+.page-toc a {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.page-toc a:hover {
+  color: var(--brown-dark);
+}
+
+.page-toc a.is-active {
+  background: var(--terracotta);
+  color: var(--cream);
+}
+
+/* Smooth scroll with offset for the topnav when jumping to anchors */
+html {
+  scroll-padding-top: 110px;
+}
+
+/* ============================================================
+   SITE FOOTER  (persistent across all pages)
+   ============================================================ */
+
+.site-footer {
+  position: relative;
+  z-index: 3;
+  background: var(--cream);
+  border-top: 1px solid var(--faint);
+  padding: 28px 24px 36px;
+  text-align: center;
+}
+
+.site-footer-rule {
+  width: 36px;
+  height: 1px;
+  background: var(--gold);
+  border: none;
+  margin: 0 auto 18px;
+  opacity: 0.6;
+}
+
+.site-footer-line {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.7;
+}
+
+.site-footer-line a {
+  color: var(--brown-dark);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.site-footer-line a:hover {
+  text-decoration-color: var(--terracotta);
+}
+
+.site-footer-meta {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.7;
+  margin: 8px 0 0;
+}
+
+/* Dark variant for the moments page */
+[data-nav="dark"] .site-footer {
+  background: #0a0506;
+  border-top-color: rgba(249, 248, 218, 0.08);
+}
+[data-nav="dark"] .site-footer-line {
+  color: rgba(249, 248, 218, 0.6);
+}
+[data-nav="dark"] .site-footer-line a {
+  color: var(--cream);
+}
+[data-nav="dark"] .site-footer-meta {
+  color: rgba(249, 248, 218, 0.45);
+}
+
+/* ============================================================
+   LOGIN SCREEN  (own minimal layout, no page-frame)
+   ============================================================ */
+
+.login-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--cream);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.login-motif {
+  width: 110px;
+  height: auto;
+  margin: 0 auto 18px;
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+}
+
+.login-title {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 6vw, 44px);
+  letter-spacing: 0.04em;
+  color: var(--brown-dark);
+  margin: 0;
+}
+
+.login-sub {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 12px 0 36px 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-field span {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.login-field input {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--brown-dark);
+  padding: 12px 14px;
+  background: rgba(46, 28, 30, 0.04);
+  border: 1.5px solid var(--faint);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.login-field input:focus {
+  border-color: var(--terracotta);
+  background: var(--cream);
+}
+
+.login-submit {
+  margin-top: 10px;
+  align-self: stretch;
+  text-align: center;
+}
+
+.login-error {
+  display: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--terracotta);
+  margin: 4px 0 0;
+}
+
+/* ============================================================
+   HOME GUEST GREETING
+   ============================================================ */
+
+.guest-greeting {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  margin: 0 0 18px 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+}
+
+.guest-greeting.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.guest-greeting::before,
+.guest-greeting::after {
+  content: "·";
+  margin: 0 10px;
+  color: var(--gold-deep);
+}
+
 /* ============================================================
    INLINE BODY LINK  (matches surrounding text, gold underline)
    ============================================================ */
@@ -403,7 +722,7 @@ img { display: block; max-width: 100%; }
 
 .checklist-item {
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: 64px 1fr;
   gap: 24px;
   position: relative;
   padding-bottom: 36px;
@@ -417,29 +736,35 @@ img { display: block; max-width: 100%; }
 .checklist-item:not(:last-child)::before {
   content: "";
   position: absolute;
-  left: 27px;
-  top: 56px;
+  left: 31px;
+  top: 64px;
   bottom: 8px;
   width: 2px;
   background: var(--faint);
 }
 
 .checklist-step {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   border: 2px solid var(--faint);
   background: var(--cream);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--muted);
   position: relative;
   z-index: 2;
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.checklist-step img {
+  width: 56%;
+  height: 56%;
+  object-fit: contain;
+  opacity: 0.78;
+  mix-blend-mode: multiply;
+  transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
 .section--alt .checklist-step {
@@ -448,15 +773,22 @@ img { display: block; max-width: 100%; }
 
 .checklist-item--now .checklist-step {
   background: var(--terracotta);
-  color: var(--cream);
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 6px rgba(180, 99, 58, 0.12);
+  box-shadow: 0 0 0 6px rgba(180, 99, 58, 0.14);
+}
+.checklist-item--now .checklist-step img {
+  /* Render motif near-white against terracotta */
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+  mix-blend-mode: normal;
 }
 
 .checklist-item--final .checklist-step {
   background: var(--gold);
-  color: var(--brown-dark);
   border-color: var(--gold);
+}
+.checklist-item--final .checklist-step img {
+  opacity: 0.92;
 }
 
 .checklist-body {
@@ -532,58 +864,23 @@ img { display: block; max-width: 100%; }
 
 @media (max-width: 640px) {
   .checklist-item {
-    grid-template-columns: 44px 1fr;
+    grid-template-columns: 52px 1fr;
     gap: 16px;
     padding-bottom: 28px;
   }
   .checklist-step {
-    width: 44px;
-    height: 44px;
-    font-size: 15px;
+    width: 52px;
+    height: 52px;
   }
   .checklist-item:not(:last-child)::before {
-    left: 21px;
-    top: 44px;
+    left: 25px;
+    top: 52px;
   }
   .checklist-body { padding-top: 6px; }
   .checklist-title { font-size: 16px; }
   .checklist-text { font-size: 15px; }
 }
 
-/* ============================================================
-   CURSOR LEOPARD  (home page only, desktop only)
-   ============================================================ */
-
-.cursor-leopard {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 90px;
-  height: 90px;
-  pointer-events: none;
-  z-index: 4;
-  opacity: 0;
-  transform: translate(-9999px, -9999px);
-  transition: opacity 0.6s ease;
-  will-change: transform, opacity;
-}
-
-.cursor-leopard img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  opacity: 0.42;
-  mix-blend-mode: multiply;
-  transform: translate(-50%, -50%);
-}
-
-.cursor-leopard.is-visible {
-  opacity: 1;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .cursor-leopard { display: none; }
-}
 
 /* ============================================================
    LAYOUT
@@ -843,6 +1140,14 @@ img { display: block; max-width: 100%; }
 [data-nav="dark"] .navlinks a.nav-rsvp:hover {
   background: var(--cream);
   color: var(--brown-dark);
+}
+
+/* is-current on the dark nav variant — keep gold underline, brighten text */
+[data-nav="dark"] .navlinks a.is-current {
+  color: var(--cream);
+}
+[data-nav="dark"] .navlinks a.is-current::after {
+  background: var(--gold);
 }
 
 /* ============================================================
@@ -1341,19 +1646,24 @@ img { display: block; max-width: 100%; }
 }
 
 .registry-links {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-top: 32px;
-  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .registry-links { grid-template-columns: 1fr; }
 }
 
 .registry-link-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "region arrow"
+    "name   arrow";
   align-items: center;
-  justify-content: space-between;
   width: 100%;
-  max-width: 420px;
   border: 1px solid var(--faint);
   border-radius: 12px;
   padding: 16px 20px;
@@ -1363,19 +1673,68 @@ img { display: block; max-width: 100%; }
 
 .registry-link-row:hover {
   background: rgba(46, 28, 30, 0.04);
-  border-color: rgba(46, 28, 30, 0.3);
+  border-color: var(--terracotta);
+}
+
+.registry-link-region {
+  grid-area: region;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
 }
 
 .registry-link-name {
+  grid-area: name;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--brown-dark);
 }
 
 .registry-link-arrow {
-  font-size: 16px;
+  grid-area: arrow;
+  font-size: 18px;
   color: var(--muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.registry-link-row:hover .registry-link-arrow {
+  color: var(--terracotta);
+  transform: translateX(3px);
+}
+
+/* Non-link variant (UPI shows an ID, not a destination) */
+.registry-link-row--static {
+  cursor: default;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "region"
+    "name"
+    "upi";
+}
+
+.registry-link-row--static:hover {
+  background: transparent;
+  border-color: var(--faint);
+}
+
+.registry-upi-id {
+  grid-area: upi;
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: rgba(46, 28, 30, 0.06);
+  border-radius: 6px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--brown-dark);
+  word-break: break-all;
+  user-select: all;
+  justify-self: start;
 }
 
 /* ============================================================

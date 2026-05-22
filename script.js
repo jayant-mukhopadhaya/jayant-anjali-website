@@ -98,15 +98,36 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
 }
 
 // ============================================================
-// Countdown to the wedding — Nov 21, 2026 14:00 IST (UTC+5:30)
-// Renders D / H / M / S into [data-cd="..."] cells.
+// Guest greeting — show "Welcome, [name]" if a name was captured at login
 // ============================================================
 (function () {
-  var root = document.getElementById('countdown');
-  if (!root) return;
+  var el = document.getElementById('guestGreeting');
+  if (!el) return;
+  var name = '';
+  try { name = sessionStorage.getItem('wedding_guest_name') || ''; } catch (e) {}
+  if (!name) return;
+  el.textContent = 'Welcome, ' + name;
+  el.removeAttribute('hidden');
+  // Defer adding the visible class so the transition runs
+  requestAnimationFrame(function () { el.classList.add('is-visible'); });
+})();
 
-  // 2026-11-21 14:00:00 IST = 08:30:00 UTC
-  var TARGET = Date.UTC(2026, 10, 21, 8, 30, 0);
+// ============================================================
+// Countdown to the wedding — Nov 21–22, 2026, IST (UTC+5:30)
+// Three states:
+//   1. before  → live D/H/M/S countdown
+//   2. during  → "We're getting married today" (Nov 21 14:00 → Nov 22 22:00 IST)
+//   3. after   → "Thank you for celebrating with us"
+// ============================================================
+(function () {
+  var wrap = document.getElementById('countdownWrap');
+  var root = document.getElementById('countdown');
+  if (!root || !wrap) return;
+
+  // Sat 2026-11-21 14:00 IST = 08:30 UTC
+  // Sun 2026-11-22 22:00 IST = 16:30 UTC
+  var START = Date.UTC(2026, 10, 21, 8, 30, 0);
+  var END   = Date.UTC(2026, 10, 22, 16, 30, 0);
 
   var cells = {
     days:    root.querySelector('[data-cd="days"]'),
@@ -117,8 +138,36 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
 
   function pad(n) { return n < 10 ? '0' + n : String(n); }
 
+  function renderMessage(text) {
+    // Replace the countdown + tz line with a single styled message
+    wrap.innerHTML = '<p class="countdown-message">' + text + '</p>';
+  }
+
+  var timer;
+  var state = 'before';
+
   function tick() {
-    var diff = TARGET - Date.now();
+    var now = Date.now();
+
+    if (now >= END && state !== 'after') {
+      state = 'after';
+      renderMessage("Thank you for celebrating with us.");
+      clearInterval(timer);
+      return;
+    }
+
+    if (now >= START && now < END && state !== 'during') {
+      state = 'during';
+      renderMessage("We're getting married today.");
+      clearInterval(timer);
+      // Re-check once every minute in case the page is left open and END passes
+      timer = setInterval(tick, 60000);
+      return;
+    }
+
+    if (state !== 'before') return;
+
+    var diff = START - now;
     if (diff < 0) diff = 0;
     var s = Math.floor(diff / 1000);
     var days  = Math.floor(s / 86400);
@@ -140,50 +189,50 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
   }
 
   tick();
-  setInterval(tick, 1000);
+  timer = setInterval(tick, 1000);
 })();
 
 // ============================================================
-// Cursor-following leopard (home page only, fine pointers)
+// Page TOC — highlight the current section as you scroll (plan page)
 // ============================================================
 (function () {
-  var leopard = document.querySelector('.cursor-leopard');
-  if (!leopard) return;
-  // Skip on touch / coarse pointers
-  if (window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-    return;
-  }
-  // Honor reduced motion
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return;
-  }
+  var tocLinks = document.querySelectorAll('.page-toc a');
+  if (tocLinks.length === 0 || !('IntersectionObserver' in window)) return;
 
-  var mouseX = window.innerWidth / 2;
-  var mouseY = window.innerHeight / 2;
-  var x = mouseX, y = mouseY;
-  var visible = false;
-
-  window.addEventListener('mousemove', function (e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    if (!visible) {
-      visible = true;
-      leopard.classList.add('is-visible');
-    }
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', function () {
-    visible = false;
-    leopard.classList.remove('is-visible');
+  var idToLinks = {};
+  tocLinks.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    if (!id) return;
+    if (!idToLinks[id]) idToLinks[id] = [];
+    idToLinks[id].push(a);
   });
 
-  function animate() {
-    x += (mouseX - x) * 0.06;
-    y += (mouseY - y) * 0.06;
-    leopard.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-    requestAnimationFrame(animate);
+  var sections = Object.keys(idToLinks)
+    .map(function (id) { return document.getElementById(id); })
+    .filter(Boolean);
+
+  if (sections.length === 0) return;
+
+  function setActive(id) {
+    tocLinks.forEach(function (a) { a.classList.remove('is-active'); });
+    (idToLinks[id] || []).forEach(function (a) { a.classList.add('is-active'); });
   }
-  animate();
+
+  var observer = new IntersectionObserver(function (entries) {
+    // Find the topmost section currently intersecting
+    var visible = entries
+      .filter(function (e) { return e.isIntersecting; })
+      .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+    if (visible.length > 0) {
+      setActive(visible[0].target.id);
+    }
+  }, {
+    // Activate when the section's top crosses 25% from the top of the viewport
+    rootMargin: '-25% 0px -65% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(function (s) { observer.observe(s); });
 })();
 
 // ============================================================
