@@ -434,6 +434,7 @@ img { display: block; max-width: 100%; }
   margin: 0 auto;
   display: flex;
   align-items: center;
+  justify-content: safe center;
   gap: 10px;
   padding: 10px 16px;
   background: rgba(249, 248, 218, 0.94);
@@ -1697,15 +1698,38 @@ html {
   grid-area: upi;
   display: inline-block;
   margin-top: 10px;
-  padding: 6px 10px;
+  padding: 5px 9px;
   background: rgba(46, 28, 30, 0.06);
   border-radius: 6px;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px;
+  font-size: 11px;
+  line-height: 1.4;
   color: var(--brown-dark);
-  word-break: break-all;
+  /* Break ONLY at the explicit <wbr> in the markup — no mid-word breaks. */
+  overflow-wrap: normal;
+  word-break: normal;
   user-select: all;
-  justify-self: start;
+  justify-self: center;
+  text-align: center;
+  max-width: 100%;
+}
+
+/* Tighten the registry page so the whole thing fits in one viewport on desktop */
+[data-page="registry"] .page-header {
+  min-height: auto;
+  padding: 96px 24px 16px;
+}
+
+[data-page="registry"] .registry-section {
+  padding: 28px 24px 40px;
+}
+
+[data-page="registry"] .registry-content .body {
+  margin-bottom: 0;
+}
+
+[data-page="registry"] .registry-links {
+  margin-top: 20px;
 }
 
 /* ============================================================
