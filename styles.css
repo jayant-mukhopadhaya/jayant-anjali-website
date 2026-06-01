@@ -663,35 +663,6 @@ html {
 }
 
 /* ============================================================
-   HOME GUEST GREETING
-   ============================================================ */
-
-.guest-greeting {
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--sage-deep);
-  margin: 0 0 18px 0;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
-}
-
-.guest-greeting.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-.guest-greeting::before,
-.guest-greeting::after {
-  content: "·";
-  margin: 0 10px;
-  color: var(--gold-deep);
-}
-
-/* ============================================================
    INLINE BODY LINK  (matches surrounding text, gold underline)
    ============================================================ */
 

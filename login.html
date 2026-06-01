@@ -24,10 +24,6 @@
 
             <form id="loginForm" class="login-form" autocomplete="off">
                 <label class="login-field">
-                    <span>Your name</span>
-                    <input type="text" id="guestName" placeholder="So we can say hello" required>
-                </label>
-                <label class="login-field">
                     <span>Password</span>
                     <input type="password" id="password" placeholder="From your invitation" required>
                 </label>
@@ -40,7 +36,6 @@
     <script>
         (function () {
             var form  = document.getElementById('loginForm');
-            var name  = document.getElementById('guestName');
             var pass  = document.getElementById('password');
             var error = document.getElementById('error');
 
@@ -48,8 +43,6 @@
                 error.style.display = 'none';
                 if (pass.value === 'kokumsoda') {
                     sessionStorage.setItem('wedding_auth', 'true');
-                    var first = (name.value || '').trim().split(/\s+/)[0];
-                    if (first) sessionStorage.setItem('wedding_guest_name', first);
                     window.location.href = 'index.html';
                 } else {
                     error.style.display = 'block';

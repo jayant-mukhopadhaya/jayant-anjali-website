@@ -98,21 +98,6 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
 }
 
 // ============================================================
-// Guest greeting — show "Welcome, [name]" if a name was captured at login
-// ============================================================
-(function () {
-  var el = document.getElementById('guestGreeting');
-  if (!el) return;
-  var name = '';
-  try { name = sessionStorage.getItem('wedding_guest_name') || ''; } catch (e) {}
-  if (!name) return;
-  el.textContent = 'Welcome, ' + name;
-  el.removeAttribute('hidden');
-  // Defer adding the visible class so the transition runs
-  requestAnimationFrame(function () { el.classList.add('is-visible'); });
-})();
-
-// ============================================================
 // Countdown to the wedding — Nov 21–22, 2026, IST (UTC+5:30)
 // Three states:
 //   1. before  → live D/H/M/S countdown
