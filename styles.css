@@ -3,6 +3,24 @@
    ============================================================ */
 
 @font-face {
+  font-family: "Faire-Sprig";
+  src: url("assets/fonts/FAIRE-Sprig/FAIRE-Sprig-Trial-Variable.woff2") format("woff2-variations"),
+       url("assets/fonts/FAIRE-Sprig/FAIRE-Sprig-Trial-Variable.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Faire-Sprig";
+  src: url("assets/fonts/FAIRE-Sprig/FAIRE-Sprig-Italic-Trial-Variable.woff2") format("woff2-variations"),
+       url("assets/fonts/FAIRE-Sprig/FAIRE-Sprig-Italic-Trial-Variable.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Akke-Poster";
   src: url("assets/fonts/Akke-Trial/static/Akke-PosterBigBlack.otf") format("opentype");
   font-weight: 900;
@@ -56,6 +74,7 @@
   --sage-deep:       #3f5043;
   --gold:            #D6A84E;
   --gold-deep:       #b88a35;
+  --crimson:         #91191F;
 
   /* Semantic */
   --bg:     var(--cream);
@@ -192,12 +211,32 @@ img { display: block; max-width: 100%; }
   text-align: center;
 }
 
-/* Taller version for the home page */
+/* Taller version for the home page — cream ground, crimson logotype */
 .page-header--home {
   min-height: 88vh;
   justify-content: center;
   padding: 140px 24px 80px;
   gap: 0;
+}
+
+.page-header--home .page-title--logotype {
+  color: var(--crimson);
+}
+
+/* No side borders on the home page */
+[data-page="home"] .page-frame {
+  padding: 0;
+  background-image: none;
+}
+
+/* RSVP button is crimson on the home hero */
+.page-header--home .btn--primary {
+  background: var(--crimson);
+  border-color: var(--crimson);
+}
+.page-header--home .btn--primary:hover {
+  background: #6d1010;
+  border-color: #6d1010;
 }
 
 .page-header-motif {
@@ -229,11 +268,13 @@ img { display: block; max-width: 100%; }
   line-height: 1.05;
 }
 
-/* Home page gets the Akke logotype treatment */
+/* Home page gets the Faire-Sprig logotype treatment */
 .page-title--logotype {
-  font-family: var(--font-display);
-  font-size: clamp(44px, 8vw, 100px);
-  letter-spacing: 0.04em;
+  font-family: "Faire-Sprig", var(--font-display);
+  font-weight: 550;
+  font-size: clamp(42px, 8.4vw, 98px);
+  letter-spacing: 0.015em;
+  line-height: 0.8;
   color: var(--brown-dark);
 }
 
@@ -290,7 +331,7 @@ img { display: block; max-width: 100%; }
 .countdown-value {
   font-family: var(--font-sans);
   font-weight: 300;
-  font-size: clamp(34px, 5.6vw, 60px);
+  font-size: clamp(27px, 4.5vw, 48px);
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--brown-dark);
@@ -574,28 +615,69 @@ html {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background: var(--cream);
+  background: var(--crimson);
 }
 
 .login-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 640px;
   text-align: center;
+}
+
+.login-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.login-parrot {
+  width: auto;
+  height: clamp(115px, 17vw, 154px);
+  flex-shrink: 0;
+  filter: brightness(0) invert(1) sepia(0.18) saturate(0.8) brightness(0.97);
+}
+
+@media (max-width: 600px) {
+  .login-parrot { height: clamp(80px, 17vw, 115px); }
+  .login-title-wrap { gap: 14px; }
+}
+
+/* Home page parrots flanking the logotype */
+.page-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.page-parrot {
+  width: auto;
+  height: clamp(100px, 20vw, 235px);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .page-parrot { height: clamp(100px, 29vw, 144px); }
+  .page-title-wrap { gap: 14px; }
 }
 
 .login-motif {
   width: 110px;
   height: auto;
   margin: 0 auto 18px;
-  opacity: 0.7;
-  mix-blend-mode: multiply;
+  opacity: 0.18;
+  mix-blend-mode: normal;
+  filter: brightness(0) invert(1);
 }
 
 .login-title {
-  font-family: var(--font-display);
-  font-size: clamp(30px, 6vw, 44px);
-  letter-spacing: 0.04em;
-  color: var(--brown-dark);
+  font-family: "Faire-Sprig", var(--font-display);
+  font-weight: 500;
+  font-size: clamp(60px, 9vw, 80px);
+  letter-spacing: 0.02em;
+  line-height: 0.8;
+  color: #f4ecd7;
   margin: 0;
 }
 
@@ -605,8 +687,8 @@ html {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
-  margin: 12px 0 36px 0;
+  color: rgba(249, 248, 218, 0.6);
+  margin: 14px 0 36px 0;
 }
 
 .login-form {
@@ -614,6 +696,9 @@ html {
   flex-direction: column;
   gap: 16px;
   text-align: left;
+  max-width: 380px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .login-field {
@@ -628,38 +713,50 @@ html {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(249, 248, 218, 0.6);
 }
 
 .login-field input {
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 400;
-  color: var(--brown-dark);
+  color: var(--cream);
   padding: 12px 14px;
-  background: rgba(46, 28, 30, 0.04);
-  border: 1.5px solid var(--faint);
+  background: rgba(249, 248, 218, 0.08);
+  border: 1.5px solid rgba(249, 248, 218, 0.22);
   border-radius: 10px;
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
+.login-field input::placeholder {
+  color: rgba(249, 248, 218, 0.28);
+}
+
 .login-field input:focus {
-  border-color: var(--terracotta);
-  background: var(--cream);
+  border-color: rgba(249, 248, 218, 0.55);
+  background: rgba(249, 248, 218, 0.13);
 }
 
 .login-submit {
   margin-top: 10px;
   align-self: stretch;
   text-align: center;
+  background: var(--cream);
+  color: var(--crimson);
+  border-color: var(--cream);
+}
+.login-submit:hover {
+  background: rgba(249, 248, 218, 0.88);
+  border-color: rgba(249, 248, 218, 0.88);
+  color: var(--crimson);
 }
 
 .login-error {
   display: none;
   font-family: var(--font-sans);
   font-size: 13px;
-  color: var(--terracotta);
+  color: rgba(249, 248, 218, 0.75);
   margin: 4px 0 0;
 }
 
