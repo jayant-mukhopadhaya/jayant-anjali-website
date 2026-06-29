@@ -44,7 +44,7 @@
 :root {
   /* Palette — warm cream ground */
   --cream:      #f9f8da;
-  --cream-alt:  #ede9c0;
+  --cream-alt:  rgba(214, 168, 78, 0.22);  /* alt section band — matches Intl. Guests pill */
   --brown:      #553c3e;
   --brown-dark: #2e1c1e;
   --brown-mid:  #7a5658;
@@ -1490,7 +1490,7 @@ html {
 
 .travel-card-body {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--muted);
   line-height: 1.75;
   margin: 0;
