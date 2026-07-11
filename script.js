@@ -101,7 +101,7 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
 // Countdown to the wedding — Nov 21–22, 2026, IST (UTC+5:30)
 // Three states:
 //   1. before  → live D/H/M/S countdown
-//   2. during  → "We're getting married today" (Nov 21 14:00 → Nov 22 22:00 IST)
+//   2. during  → "We're getting married today" (Nov 21 15:00 → Nov 22 22:00 IST)
 //   3. after   → "Thank you for celebrating with us"
 // ============================================================
 (function () {
@@ -109,9 +109,9 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
   var root = document.getElementById('countdown');
   if (!root || !wrap) return;
 
-  // Sat 2026-11-21 14:00 IST = 08:30 UTC
+  // Sat 2026-11-21 15:00 IST = 09:30 UTC
   // Sun 2026-11-22 22:00 IST = 16:30 UTC
-  var START = Date.UTC(2026, 10, 21, 8, 30, 0);
+  var START = Date.UTC(2026, 10, 21, 9, 30, 0);
   var END   = Date.UTC(2026, 10, 22, 16, 30, 0);
 
   var cells = {
@@ -218,6 +218,48 @@ if (fadeEls.length > 0 && "IntersectionObserver" in window) {
   });
 
   sections.forEach(function (s) { observer.observe(s); });
+})();
+
+// ============================================================
+// Collapsible sections (plan page) — open the target <details>
+// when a link points at it, or when the page loads with that #hash
+// ============================================================
+(function () {
+  var collapsibles = document.querySelectorAll('.section-collapse');
+  if (collapsibles.length === 0) return;
+
+  function openById(id) {
+    var el = document.getElementById(id);
+    if (el && el.tagName === 'DETAILS' && !el.open) {
+      el.open = true;
+    }
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      openById(a.getAttribute('href').slice(1));
+    });
+  });
+
+  window.addEventListener('hashchange', function () {
+    openById(window.location.hash.slice(1));
+  });
+
+  if (window.location.hash) {
+    openById(window.location.hash.slice(1));
+  }
+
+  // Per-section "Collapse" button at the bottom of each section —
+  // closes it and scrolls back up to its heading
+  document.addEventListener('click', function (e) {
+    var closeBtn = e.target.closest('.section-collapse-close');
+    if (!closeBtn) return;
+    var details = closeBtn.closest('details.section-collapse');
+    if (!details) return;
+    details.open = false;
+    var summary = details.querySelector('summary');
+    if (summary) summary.scrollIntoView({ block: 'start', behavior: 'instant' });
+  });
 })();
 
 // ============================================================
