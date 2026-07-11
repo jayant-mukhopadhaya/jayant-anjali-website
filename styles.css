@@ -229,6 +229,12 @@ img { display: block; max-width: 100%; }
   background-image: none;
 }
 
+/* No bandhani border on the plan page — long content, border adds clutter */
+[data-page="plan"] .page-frame {
+  padding: 0;
+  background-image: none;
+}
+
 /* RSVP button is crimson on the home hero */
 .page-header--home .btn--primary {
   background: var(--crimson);
@@ -243,7 +249,7 @@ img { display: block; max-width: 100%; }
   width: 150px;
   height: auto;
   margin-bottom: 22px;
-  opacity: 0.72;
+  opacity: 1.0;
   mix-blend-mode: multiply;
 }
 
@@ -1697,6 +1703,114 @@ html {
     border-bottom: 1px solid var(--faint);
     padding: 16px 20px;
   }
+}
+
+/* ============================================================
+   COLLAPSIBLE SECTIONS  (plan page — closed by default, opened by
+   clicking their summary or a link that points at their #id)
+   ============================================================ */
+
+.section-collapse {
+  position: relative;
+}
+
+/* Vertical rule linking the top +/- button to the bottom one — same
+   color and thickness as the button's own circle border */
+.section-collapse[open]::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  bottom: 28px;
+  right: 13px;
+  width: 1px;
+  background: var(--faint);
+}
+
+.section-collapse-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.section-collapse-summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-collapse-summary::marker {
+  content: "";
+}
+
+.section-collapse-summary .section-title {
+  margin: 0;
+}
+
+.section-collapse-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--faint);
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.section-collapse-icon::before,
+.section-collapse-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--brown-dark);
+  transform: translate(-50%, -50%);
+}
+
+.section-collapse-icon::before {
+  width: 12px;
+  height: 2px;
+}
+
+.section-collapse-icon::after {
+  width: 2px;
+  height: 12px;
+  transition: opacity 0.15s ease;
+}
+
+.section-collapse[open] .section-collapse-icon::after {
+  opacity: 0;
+}
+
+.section-collapse-body {
+  margin-top: 28px;
+}
+
+/* Narrow the text/cards a touch so they don't run under the connecting line */
+.section-collapse-body > .body,
+.section-collapse-body > .travel-cards--horizontal {
+  padding-right: 36px;
+}
+
+.section-collapse-close-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+/* Bottom +/- button — same circle as the top one, always in "minus" state
+   since it only ever renders while the section is open */
+.section-collapse-close {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.section-collapse-close:hover {
+  background: rgba(46, 28, 30, 0.05);
 }
 
 /* ============================================================
