@@ -6,11 +6,11 @@ METHOD:PUBLISH
 BEGIN:VEVENT
 UID:jayant-anjali-wedding-2026-11-21@jayantandanjali
 DTSTAMP:20260101T000000Z
-DTSTART:20261121T083000Z
+DTSTART:20261121T093000Z
 DTEND:20261122T163000Z
 SUMMARY:Jayant & Anjali's Wedding
 LOCATION:Aashyana Lakhanpal, Candolim, Goa, India
-DESCRIPTION:Celebrations begin at 2:00 PM IST on Saturday, November 21 and conclude by 10:00 PM IST on Sunday, November 22.
+DESCRIPTION:Celebrations begin at 3:00 PM IST on Saturday, November 21 and conclude by 10:00 PM IST on Sunday, November 22.\n\nVenue: Aashyana Lakhanpal, Candolim, Goa\nMap: https://www.google.com/maps/search/?api=1&query=Aashyana+Lakhanpal+Goa
 URL:https://withjoy.com/jayant-and-anjali/rsvp
 END:VEVENT
 END:VCALENDAR

@@ -219,10 +219,6 @@ img { display: block; max-width: 100%; }
   gap: 0;
 }
 
-.page-header--home .page-title--logotype {
-  color: var(--crimson);
-}
-
 /* No side borders on the home page */
 [data-page="home"] .page-frame {
   padding: 0;
@@ -235,6 +231,27 @@ img { display: block; max-width: 100%; }
   background-image: none;
 }
 
+/* No bandhani border on the registry page */
+[data-page="registry"] .page-frame {
+  padding: 0;
+  background-image: none;
+}
+
+/* No bandhani border on the FAQs page */
+[data-page="faqs"] .page-frame {
+  padding: 0;
+  background-image: none;
+}
+
+/* Tighter gap between the subheading and the first question */
+[data-page="faqs"] .page-header {
+  padding-bottom: 24px;
+}
+
+[data-page="faqs"] .section {
+  padding-top: 32px;
+}
+
 /* RSVP button is crimson on the home hero */
 .page-header--home .btn--primary {
   background: var(--crimson);
@@ -243,6 +260,17 @@ img { display: block; max-width: 100%; }
 .page-header--home .btn--primary:hover {
   background: #6d1010;
   border-color: #6d1010;
+}
+
+/* Plan Your Trip button matches the nav's gold underline color */
+.page-header--home .btn--secondary {
+  color: var(--gold-deep);
+  border-color: var(--gold);
+}
+.page-header--home .btn--secondary:hover {
+  background: var(--gold);
+  color: var(--brown-dark);
+  border-color: var(--gold);
 }
 
 .page-header-motif {
@@ -274,14 +302,17 @@ img { display: block; max-width: 100%; }
   line-height: 1.05;
 }
 
-/* Home page gets the Faire-Sprig logotype treatment */
-.page-title--logotype {
-  font-family: "Faire-Sprig", var(--font-display);
-  font-weight: 550;
-  font-size: clamp(42px, 8.4vw, 98px);
-  letter-spacing: 0.015em;
-  line-height: 0.8;
-  color: var(--brown-dark);
+/* Home page — combined "Jayant & Anjali" + parrots banner artwork */
+.page-title-banner {
+  margin: 0;
+  line-height: 0;
+}
+
+.page-title-banner img {
+  width: min(660px, 69vw);
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .page-header-sub {
@@ -621,51 +652,32 @@ html {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background: var(--crimson);
+  /* Darker than --crimson to compensate for the overlay-blended grain lightening the midtones */
+  background-color: var(--terracotta-deep);
+  /* Monochromatic grain — feTurbulence desaturated via feColorMatrix, blended over the crimson ground */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
 }
 
 .login-card {
   width: 100%;
-  max-width: 640px;
+  max-width: 1200px;
   text-align: center;
 }
 
-.login-title-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
+/* Combined "Jayant & Anjali" + parrots banner artwork (same asset as the home page) */
+.login-title-banner {
+  margin: 0;
+  line-height: 0;
 }
 
-.login-parrot {
-  width: auto;
-  height: clamp(115px, 17vw, 154px);
-  flex-shrink: 0;
-  filter: brightness(0) invert(1) sepia(0.18) saturate(0.8) brightness(0.97);
-}
-
-@media (max-width: 600px) {
-  .login-parrot { height: clamp(80px, 17vw, 115px); }
-  .login-title-wrap { gap: 14px; }
-}
-
-/* Home page parrots flanking the logotype */
-.page-title-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-}
-
-.page-parrot {
-  width: auto;
-  height: clamp(100px, 20vw, 235px);
-  flex-shrink: 0;
-}
-
-@media (max-width: 640px) {
-  .page-parrot { height: clamp(100px, 29vw, 144px); }
-  .page-title-wrap { gap: 14px; }
+.login-title-banner img {
+  width: min(600px, 82vw);
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .login-motif {
@@ -677,24 +689,17 @@ html {
   filter: brightness(0) invert(1);
 }
 
-.login-title {
-  font-family: "Faire-Sprig", var(--font-display);
-  font-weight: 500;
-  font-size: clamp(60px, 9vw, 80px);
-  letter-spacing: 0.02em;
-  line-height: 0.8;
-  color: #f4ecd7;
-  margin: 0;
-}
-
 .login-sub {
   font-family: var(--font-sans);
   font-weight: 400;
-  font-size: 11px;
+  /* Scales with viewport width so its rendered width tracks the banner
+     image's own min(600px, 82vw) sizing (see .login-title-banner img) */
+  font-size: clamp(13px, 3.4vw, 25px);
+  opacity: 0.75;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(249, 248, 218, 0.6);
-  margin: 14px 0 36px 0;
+  margin: 14px 0 90px 0;
 }
 
 .login-form {
@@ -722,12 +727,17 @@ html {
   color: rgba(249, 248, 218, 0.6);
 }
 
+.login-input-wrap {
+  position: relative;
+}
+
 .login-field input {
+  width: 100%;
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 400;
   color: var(--cream);
-  padding: 12px 14px;
+  padding: 12px 44px 12px 14px;
   background: rgba(249, 248, 218, 0.08);
   border: 1.5px solid rgba(249, 248, 218, 0.22);
   border-radius: 10px;
@@ -744,18 +754,27 @@ html {
   background: rgba(249, 248, 218, 0.13);
 }
 
-.login-submit {
-  margin-top: 10px;
-  align-self: stretch;
-  text-align: center;
-  background: var(--cream);
-  color: var(--crimson);
-  border-color: var(--cream);
+.login-submit-arrow {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--cream);
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
-.login-submit:hover {
-  background: rgba(249, 248, 218, 0.88);
-  border-color: rgba(249, 248, 218, 0.88);
-  color: var(--crimson);
+
+.login-submit-arrow:hover {
+  background: rgba(249, 248, 218, 0.15);
 }
 
 .login-error {
@@ -1510,7 +1529,7 @@ html {
   font-family: var(--font-sans);
   font-weight: 500;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   text-decoration: underline;
   text-underline-offset: 4px;
   letter-spacing: 0.04em;
