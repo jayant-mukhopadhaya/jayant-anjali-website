@@ -7,71 +7,67 @@
   <meta name="robots" content="noindex, nofollow">
   <script src="auth.js"></script>
   <title>Jayant & Anjali</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@300;400;500&display=swap"
-    rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="Indian Motif Exports/Lion_1.png">
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
-  <!-- Desktop nav -->
+<body data-page="home">
+
   <header class="topnav">
     <nav class="navlinks" aria-label="Primary">
-      <a href="index.html">Home</a>
-      <a href="#rsvp">RSVP</a>
-      <a href="story.html">Our Story</a>
-      <!-- <a href="schedule.html">Schedule</a> -->
+      <a href="index.html" class="is-current">Home</a>
+      <a href="plan.html">Plan Your Trip</a>
       <a href="moments.html">Moments</a>
+      <a href="registry.html">Registry</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener" class="nav-rsvp">RSVP</a>
     </nav>
   </header>
 
-  <!-- Mobile hamburger -->
   <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
     <span></span><span></span><span></span>
   </button>
-
   <div id="mobileMenu" class="mobile-menu" hidden>
     <a href="index.html">Home</a>
-    <a href="#rsvp">RSVP</a>
-    <a href="story.html">Our Story</a>
-    <!-- <a href="schedule.html">Schedule</a> -->
+    <a href="plan.html">Plan Your Trip</a>
     <a href="moments.html">Moments</a>
+    <a href="registry.html">Registry</a>
+    <a href="faqs.html">FAQs</a>
+    <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP</a>
   </div>
 
+  <div class="page-frame">
   <main>
-    <!-- HOME: full-bleed image with big title -->
-    <section id="home" class="panel hero">
-      <img class="hero-img" src="assets/hero.jpg" alt="" />
-      <div class="hero-titlewrap">
-        <h1 class="display">JAYANT &amp; ANJALI</h1>
+    <section class="page-header page-header--home fade-in">
+      <h1 class="page-title-banner">
+        <img src="Indian Motif Exports/Red Emboss Motifs/J&amp;A banner_red.png" alt="Jayant &amp; Anjali">
+      </h1>
+      <p class="page-header-sub">November 21–22, 2026 </p>
+      <p class="page-header-sub"><a href="https://www.google.com/maps/search/?api=1&query=Aashyana+Lakhanpal+Goa" target="_blank" rel="noopener" class="body-link">Aashyana Lakhanpal</a> &nbsp;·&nbsp; Goa, India</p>
+
+      <div class="hero-ctas">
+        <a class="btn btn--secondary" href="plan.html">Plan Your Trip</a>
+        <a class="btn btn--primary" href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP by Aug 15</a>
       </div>
-    </section>
 
-    <!-- RSVP: solid brown card feel -->
-    <section id="rsvp" class="panel solid">
-      <div class="content">
-        <p class="headline">November 21, 2026 - November 22, 2026</p>
-        <p class="subhead">Goa, India</p>
-        <p class="note">
-          We’d love to know if you’re likely to attend — final RSVPs will be requested closer to the date.
-        </p>
-
-        <a class="btn-outline" href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">
-          RSVP
-        </a>
-      </div>
-      <!-- <div class="content">
-        <figure class="story-media two-up">
-          <img src="assets/save-the-date-front.png" alt="____" loading="lazy" />
-          <img src="assets/save-the-date-back.jpg" alt="____" loading="lazy" />
-        </figure>
-
-      </div> -->
+      <a class="add-to-calendar" href="assets/jayant-anjali-wedding.ics" download="jayant-anjali-wedding.ics">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M3 9h18M8 3v4M16 3v4M12 13v4M10 15h4"/>
+        </svg>
+        <span>Add to Calendar</span>
+      </a>
     </section>
   </main>
+  </div><!-- /.page-frame -->
+
+  <footer class="site-footer">
+    <p class="site-footer-line">Questions? Reach us at <a href="mailto:jayantandanjali@gmail.com">jayantandanjali@gmail.com</a></p>
+    <p class="site-footer-meta">Last updated July 2026</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

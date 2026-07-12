@@ -2,62 +2,135 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow">
-    <script src="auth.js"></script>
-    <title>Moments - Anjali & Jayant</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@300;400;500&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow">
+  <script src="auth.js"></script>
+  <title>Moments · Jayant &amp; Anjali</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="Indian Motif Exports/Lion_1.png">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
-    <header class="topnav">
-        <nav class="navlinks" aria-label="Primary">
-            <a href="index.html">Home</a>
-            <a href="index.html#rsvp">RSVP</a>
-            <a href="story.html">Our Story</a>
-            <!-- <a href="schedule.html">Schedule</a> -->
-            <a href="moments.html">Moments</a>
-        </nav>
-    </header>
+<body data-nav="dark" data-page="moments">
 
-    <!-- Mobile hamburger -->
-    <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span><span></span><span></span>
-    </button>
+  <header class="topnav">
+    <nav class="navlinks" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="plan.html">Plan Your Trip</a>
+      <a href="moments.html" class="is-current">Moments</a>
+      <a href="registry.html">Registry</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener" class="nav-rsvp">RSVP</a>
+    </nav>
+  </header>
 
-    <div id="mobileMenu" class="mobile-menu" hidden>
-        <a href="index.html">Home</a>
-        <a href="index.html#rsvp">RSVP</a>
-        <a href="story.html">Our Story</a>
-        <!-- <a href="schedule.html">Schedule</a> -->
-        <a href="moments.html">Moments</a>
+  <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="mobileMenu" class="mobile-menu" hidden>
+    <a href="index.html">Home</a>
+    <a href="plan.html">Plan Your Trip</a>
+    <a href="moments.html">Moments</a>
+    <a href="registry.html">Registry</a>
+    <a href="faqs.html">FAQs</a>
+    <a href="https://withjoy.com/jayant-and-anjali/rsvp" target="_blank" rel="noopener">RSVP</a>
+  </div>
+
+  <main class="moments-stage">
+    <div class="slideshow-wrap" id="slideshow">
+      <div class="slideshow-overlay"></div>
+      <div class="slideshow-title">
+        <h1 class="page-title">Moments</h1>
+      </div>
     </div>
+    <div class="slideshow-thumbs">
+      <div class="slideshow-thumbs-track" id="slideshowThumbs"></div>
+    </div>
+  </main>
 
-    <main>
-        <!-- HERO -->
-        <section class="panel hero">
-            <img class="hero-img" src="assets/moments.jpg" alt="" />
-            <div class="hero-titlewrap">
-                <h1 class="display">MOMENTS</h1>
-            </div>
-        </section>
+  <footer class="site-footer">
+    <hr class="site-footer-rule">
+    <p class="site-footer-line">Questions? Reach us at <a href="mailto:jayantandanjali@gmail.com">jayantandanjali@gmail.com</a></p>
+    <p class="site-footer-meta">Last updated July 2026</p>
+  </footer>
 
-        <!-- CONTENT -->
-        <section class="panel solid">
-            <div id="gallery" class="gallery"></div>
-        </section>
-    </main>
+  <script src="assets/gallery-data.js"></script>
+  <script>
+    (function () {
+      function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+        }
+        return a;
+      }
 
-    <script src="assets/gallery-data.js"></script>
+      var images   = shuffle(window.galleryImages || []);
+      var wrap     = document.getElementById('slideshow');
+      var thumbsEl = document.getElementById('slideshowThumbs');
+      if (!wrap || images.length === 0) return;
 
-    <script src="script.js"></script>
+      var overlay = wrap.querySelector('.slideshow-overlay');
+
+      var imgEls = images.map(function (src, i) {
+        var img       = document.createElement('img');
+        img.className = 'slideshow-img';
+        img.src       = src;
+        img.alt       = 'Jayant & Anjali';
+        img.loading   = i < 3 ? 'eager' : 'lazy';
+        wrap.insertBefore(img, overlay);
+        return img;
+      });
+
+      var thumbEls = images.map(function (src, i) {
+        var btn = document.createElement('button');
+        btn.className = 'slideshow-thumb';
+        btn.setAttribute('aria-label', 'Show photo ' + (i + 1));
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.loading = i < 8 ? 'eager' : 'lazy';
+        btn.appendChild(img);
+        btn.addEventListener('click', function () { goTo(i); resetTimer(); });
+        thumbsEl.appendChild(btn);
+        return btn;
+      });
+
+      var current  = 0;
+      var CYCLE_MS = 7000;
+      var timer;
+
+      function goTo(index) {
+        imgEls[current].classList.remove('active');
+        if (thumbEls[current]) thumbEls[current].classList.remove('active');
+        current = ((index % images.length) + images.length) % images.length;
+        imgEls[current].classList.add('active');
+        if (thumbEls[current]) {
+          thumbEls[current].classList.add('active');
+          // Keep the active thumbnail in view
+          thumbEls[current].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      }
+
+      function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(function () { goTo(current + 1); }, CYCLE_MS);
+      }
+
+      // Pause on hover over the slideshow itself
+      wrap.addEventListener('mouseenter', function () { clearInterval(timer); });
+      wrap.addEventListener('mouseleave', function () { resetTimer(); });
+
+      goTo(0);
+      resetTimer();
+    })();
+  </script>
+
+  <script src="script.js"></script>
 </body>
 
 </html>
