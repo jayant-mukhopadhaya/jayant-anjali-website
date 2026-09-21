@@ -1,0 +1,602 @@
+/* ============================================================
+   THE INVITATION — "Two Suns"
+
+   A full-viewport, scroll-driven invitation. One value (t, 0 to 1)
+   carries you from Saturday noon to Sunday midnight: it sets the
+   hour, the hour sets the sun's height, and the sun sets the sky.
+   Ink flips between deep red and cream as the sky darkens.
+
+   Layout and transitions live here; invite.js owns only what
+   genuinely changes with t (sky colours, ink, card geometry,
+   opacity). The CLOCK / SKY / EVENTS tables in invite.js are the
+   original design's own numbers, carried over unchanged.
+   ============================================================ */
+
+html.invite-html,
+html.invite-html body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  height: 100dvh;
+  background: #10131f;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+.invite {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  background: var(--inv-sky-bottom, #10131f);
+}
+
+.invite.is-dragging { cursor: grabbing; }
+
+.invite-sky {
+  position: absolute;
+  inset: 0;
+  transition: background 0.3s linear;
+}
+
+.invite.is-dragging .invite-sky { transition: none; }
+
+.invite-haze {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52%;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------
+   Clock — the day and the time, drifting as you scroll
+   ------------------------------------------------------------ */
+
+.invite-clock {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + clamp(22px, 3.4vh, 40px));
+  left: clamp(24px, 4vw, 56px);
+  right: clamp(24px, 4vw, 56px);
+  /* clear the menu button, which is fixed at the top-left */
+  padding-left: 52px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--inv-ink, #f2e6cc);
+  pointer-events: none;
+  transition: color 0.4s linear;
+}
+
+.invite-clock span {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: opacity 0.5s ease;
+}
+
+/* ------------------------------------------------------------
+   Event cards
+   ------------------------------------------------------------ */
+
+.invite-event {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.4vh, 34px);
+  padding: 6vh var(--inv-gutter, 20px) 10vh;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* the wedding card runs larger, so it borrows back a little of the
+   empty space its own bottom padding was holding */
+@media (min-width: 621px) {
+  .invite-event[data-event="wedding"] { padding-bottom: 7vh; }
+}
+
+.invite-card {
+  perspective: 1600px;
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.invite-flipper {
+  position: relative;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.3, 0.85, 0.2, 1);
+  pointer-events: none;
+}
+
+.invite-flipper.is-flippable { cursor: pointer; }
+
+.invite-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 3px;
+  box-shadow: 0 30px 70px rgba(20, 10, 6, var(--inv-card-shadow, 0.34));
+}
+
+.invite-face--back { transform: rotateY(180deg); }
+
+.invite-fliphint {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--inv-ink, #f2e6cc);
+  opacity: 0.55;
+  cursor: pointer;
+  pointer-events: none;
+  margin-top: clamp(-6px, -0.8vh, 0px);
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1), color 0.4s linear;
+}
+
+.invite-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--inv-ink, #f2e6cc);
+  max-width: 52ch;
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1), color 0.4s linear;
+}
+
+.invite-wear-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.invite-swatches {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.invite-swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.16);
+}
+
+.invite-wear {
+  margin: 0;
+  font-family: "Akke-Text", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(15px, 1.25vw, 17px);
+  letter-spacing: 0.01em;
+  line-height: 1.55;
+  opacity: 0.8;
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+.invite.is-dragging .invite-card,
+.invite.is-dragging .invite-fliphint,
+.invite.is-dragging .invite-text { transition: none; }
+
+/* ------------------------------------------------------------
+   Rail — the four events down the right edge
+   ------------------------------------------------------------ */
+
+.invite-rail {
+  position: absolute;
+  right: var(--inv-rail-right, 24px);
+  top: 22vh;
+  bottom: 22vh;
+  width: 1px;
+  transition: opacity 0.4s ease;
+}
+
+.invite-rail-line {
+  position: absolute;
+  inset: 0;
+  background: var(--inv-rule, rgba(242, 230, 204, 0.22));
+}
+
+.invite-rail-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  background: var(--inv-accent, #d8c08a);
+  opacity: 0.7;
+}
+
+.invite-dot-hit {
+  position: absolute;
+  right: -9px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 6px 9px 14px;
+  margin: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--inv-ink, #f2e6cc);
+}
+
+.invite-dot-hit.is-active { right: -11px; }
+
+.invite-dot-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.35;
+  text-wrap: balance;
+  opacity: 0.3;
+  transition: opacity 0.35s ease;
+}
+
+.invite-dot-hit.is-active .invite-dot-label { opacity: 0.92; }
+
+.invite-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1px solid var(--inv-rule-strong, rgba(242, 230, 204, 0.55));
+  transition: all 0.35s ease;
+}
+
+.invite-dot-hit.is-active .invite-dot {
+  width: 11px;
+  height: 11px;
+  background: var(--inv-accent, #d8c08a);
+}
+
+/* labels collapse to dots, then vanish, as the viewport narrows */
+.invite-rail[data-mode="dots"] .invite-dot-label,
+.invite-rail[data-mode="none"] { display: none; }
+
+/* ------------------------------------------------------------
+   Intro, outro, dress code
+   ------------------------------------------------------------ */
+
+.invite-intro,
+.invite-outro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(18px, 4vh, 70px) clamp(24px, 6vw, 90px);
+  color: var(--inv-ink, #f2e6cc);
+  text-align: center;
+  transition: opacity 0.6s ease;
+}
+
+.invite-intro {
+  background: radial-gradient(ellipse at 50% 52%, rgba(18, 12, 10, 0.34) 0%, rgba(18, 12, 10, 0.12) 46%, rgba(18, 12, 10, 0) 74%);
+}
+
+.invite-outro {
+  background: radial-gradient(ellipse at 50% 52%, rgba(10, 8, 14, 0.42) 0%, rgba(10, 8, 14, 0.16) 48%, rgba(10, 8, 14, 0) 76%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.invite-intro-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(880px, 92vw);
+  animation: inviteIntroIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.invite.has-started .invite-intro-inner { animation: none; }
+
+.invite-names {
+  font-family: "Faire-Sprig", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(54px, min(13vw, 15vh), 150px);
+  line-height: 0.92;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+}
+
+.invite-names .invite-name--groom { color: #751015; }
+
+.invite-date {
+  font-family: "Faire-Sprig", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(21px, min(4.4vw, 5vh), 50px);
+  line-height: 1.1;
+  margin-top: clamp(14px, 3.4vh, 46px);
+  white-space: nowrap;
+}
+
+.invite-venue {
+  font-family: "Faire-Sprig", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(14px, min(2.5vw, 2.9vh), 28px);
+  line-height: 1.2;
+  margin-top: clamp(6px, 1.4vh, 18px);
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+.invite-btn {
+  display: inline-block;
+  cursor: pointer;
+  padding: 13px 30px;
+  border-radius: 40px;
+  background: none;
+  border: 1px solid var(--inv-rule-strong, rgba(242, 230, 204, 0.45));
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: border-color 0.3s ease, opacity 0.3s ease;
+}
+
+.invite-btn:hover { opacity: 0.68; }
+
+.invite-intro .invite-btn { margin-top: clamp(22px, 5vh, 62px); }
+
+.invite-cue-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(20px, 4vh, 42px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.invite-cue-text {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--inv-ink-soft, rgba(242, 230, 204, 0.66));
+  opacity: 0.92;
+}
+
+.invite-cue-text .invite-cue-lead { letter-spacing: 2.6px; }
+
+.invite-cue {
+  width: 1px;
+  height: clamp(18px, 3vh, 34px);
+  color: var(--inv-ink, #f2e6cc);
+  opacity: 0.55;
+  background: linear-gradient(to bottom, currentColor, transparent);
+  animation: inviteCueDrift 2.6s ease-in-out infinite;
+}
+
+.invite-outro-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(9px, 1.5vh, 17px);
+  width: min(640px, 88vw);
+}
+
+.invite-outro-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(36px, 5.6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.invite-rule {
+  width: 54px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  margin: 4px 0 2px;
+}
+
+.invite-outro-meta {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.invite-outro-btns {
+  display: flex;
+  gap: clamp(8px, 1.4vw, 16px);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: clamp(6px, 1.4vh, 14px);
+}
+
+.invite-dress {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vh, 22px);
+  padding: clamp(18px, 4vh, 56px) clamp(18px, 5vw, 70px);
+  cursor: pointer;
+  background: rgba(12, 9, 14, 0.62);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  touch-action: none;
+}
+
+.invite-dress[hidden] { display: none; }
+
+.invite-dress-card {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  box-shadow: 0 34px 80px rgba(20, 10, 6, 0.5);
+}
+
+.invite-dress-hint {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f2e6cc;
+  opacity: 0.6;
+}
+
+@keyframes inviteIntroIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes inviteCueDrift {
+  0%, 100% { transform: translateY(0); opacity: 0.35; }
+  50%      { transform: translateY(9px); opacity: 0.9; }
+}
+
+/* ------------------------------------------------------------
+   Navigation — the menu button rides along with the sky, so it
+   stays legible from Saturday noon through Sunday midnight
+   ------------------------------------------------------------ */
+
+[data-nav="invite"] .hamburger {
+  background: var(--inv-chrome-bg, rgba(20, 10, 12, 0.3));
+  border-color: var(--inv-rule-strong, rgba(242, 230, 204, 0.45));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 60;
+  transition: background 0.4s linear, border-color 0.4s linear;
+}
+
+[data-nav="invite"] .hamburger span {
+  background: var(--inv-ink, #f2e6cc);
+  transition: background 0.4s linear;
+}
+
+[data-nav="invite"] .mobile-menu {
+  background: rgba(249, 248, 218, 0.97);
+  z-index: 61;
+}
+
+/* the invite has no top bar, so the menu button stays at every width */
+@media (min-width: 900px) {
+  [data-nav="invite"] .hamburger { display: flex !important; }
+  [data-nav="invite"] .mobile-menu:not([hidden]) { display: grid !important; }
+}
+
+/* ------------------------------------------------------------
+   Accessibility
+   ------------------------------------------------------------ */
+
+/* a ring for keyboard travellers, nothing after a mouse click */
+.invite-btn:focus,
+.invite-fliphint:focus,
+.invite-dot-hit:focus { outline: none; }
+
+.invite-btn:focus-visible,
+.invite-fliphint:focus-visible,
+.invite-dot-hit:focus-visible {
+  outline: 2px solid var(--inv-accent, #d8c08a);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.invite-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.invite-noscript {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 40px;
+  text-align: center;
+  background: #10131f;
+  color: #f2e6cc;
+}
+
+.invite-noscript h1 {
+  font-family: "Faire-Sprig", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(38px, 9vw, 86px);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.invite-noscript p {
+  font-family: "Akke-Text", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.7;
+  opacity: 0.82;
+  max-width: 44ch;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invite-sky,
+  .invite-card,
+  .invite-flipper,
+  .invite-fliphint,
+  .invite-text,
+  .invite-intro,
+  .invite-outro,
+  .invite-rail,
+  .invite-dot,
+  .invite-dot-label { transition: none !important; }
+
+  .invite-cue { animation: none; }
+  .invite-intro-inner { animation: none; }
+}
