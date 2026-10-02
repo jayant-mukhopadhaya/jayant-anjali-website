@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "wedding-site",
-      "runtimeExecutable": "/Users/j.mukhopadhaya/anaconda3/bin/python3",
+      "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "3456"],
       "port": 3456
     }
