@@ -3,13 +3,17 @@
 
    A full-viewport, scroll-driven invitation. One value (t, 0 to 1)
    carries you from Saturday noon to Sunday midnight: it sets the
-   hour, the hour sets the sun's height, and the sun sets the sky.
-   Ink flips between deep red and cream as the sky darkens.
+   hour, the hour picks the event, and each event holds its own
+   solid colour behind its card. Ink flips between deep red and
+   cream as the field darkens.
 
    Layout and transitions live here; invite.js owns only what
-   genuinely changes with t (sky colours, ink, card geometry,
-   opacity). The CLOCK / SKY / EVENTS tables in invite.js are the
-   original design's own numbers, carried over unchanged.
+   genuinely changes with t (field colour, ink, card geometry,
+   opacity). The CLOCK / FIELD / EVENTS tables in invite.js are the
+   design's own numbers ("Two Suns - Solid Colors").
+
+   On a light field the ink goes fully solid, so anything that is
+   softened on dark is lifted back to full strength under .is-light.
    ============================================================ */
 
 html.invite-html,
@@ -46,15 +50,6 @@ html.invite-html body {
 
 .invite.is-dragging .invite-sky { transition: none; }
 
-.invite-haze {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 52%;
-  pointer-events: none;
-}
-
 /* ------------------------------------------------------------
    Clock — the day and the time, drifting as you scroll
    ------------------------------------------------------------ */
@@ -72,17 +67,28 @@ html.invite-html body {
   gap: 10px;
   flex-wrap: wrap;
   color: var(--inv-ink, #f2e6cc);
+  opacity: 0;
   pointer-events: none;
-  transition: color 0.4s linear;
+  transition: color 0.4s linear, opacity 0.5s ease;
 }
 
 .invite-clock span {
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 11px;
+  font-weight: 700;
+  font-size: 14px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: opacity 0.5s ease;
+  opacity: 0.76;
+}
+
+.invite.is-light .invite-clock span { opacity: 1; }
+
+@media (max-width: 619px) {
+  .invite-clock {
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    left: 18px;
+    right: 18px;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -103,10 +109,9 @@ html.invite-html body {
   pointer-events: none;
 }
 
-/* the wedding card runs larger, so it borrows back a little of the
-   empty space its own bottom padding was holding */
-@media (min-width: 621px) {
-  .invite-event[data-event="wedding"] { padding-bottom: 7vh; }
+/* phones keep the card clear of the browser's bottom bar */
+@media (max-width: 619px) {
+  .invite-event { padding: 5vh var(--inv-gutter, 20px) 13vh; }
 }
 
 .invite-card {
@@ -144,9 +149,9 @@ html.invite-html body {
   border: 0;
   background: none;
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--inv-ink, #f2e6cc);
@@ -156,6 +161,8 @@ html.invite-html body {
   margin-top: clamp(-6px, -0.8vh, 0px);
   transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1), color 0.4s linear;
 }
+
+.invite.is-light .invite-fliphint { opacity: 1; }
 
 .invite-text {
   display: flex;
@@ -170,11 +177,27 @@ html.invite-html body {
 
 .invite-wear-row {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-top: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.invite-wear-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.invite-wear-label {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.95;
 }
 
 .invite-swatches {
@@ -194,13 +217,16 @@ html.invite-html body {
   margin: 0;
   font-family: "Akke-Text", Georgia, serif;
   font-weight: 400;
-  font-size: clamp(15px, 1.25vw, 17px);
+  font-size: clamp(15px, 1.25vw, 18px);
   letter-spacing: 0.01em;
-  line-height: 1.55;
+  line-height: 1.5;
   opacity: 0.8;
   max-width: 44ch;
   text-wrap: pretty;
 }
+
+.invite.is-light .invite-wear-label,
+.invite.is-light .invite-wear { opacity: 1; }
 
 .invite.is-dragging .invite-card,
 .invite.is-dragging .invite-fliphint,
@@ -217,6 +243,10 @@ html.invite-html body {
   bottom: 22vh;
   width: 1px;
   transition: opacity 0.4s ease;
+}
+
+@media (max-width: 619px) {
+  .invite-rail { top: 26vh; bottom: 26vh; }
 }
 
 .invite-rail-line {
@@ -253,18 +283,18 @@ html.invite-html body {
 
 .invite-dot-label {
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: right;
   line-height: 1.35;
   text-wrap: balance;
-  opacity: 0.3;
+  opacity: 0.62;
   transition: opacity 0.35s ease;
 }
 
-.invite-dot-hit.is-active .invite-dot-label { opacity: 0.92; }
+.invite-dot-hit.is-active .invite-dot-label { opacity: 1; }
 
 .invite-dot {
   width: 7px;
@@ -272,7 +302,7 @@ html.invite-html body {
   border-radius: 50%;
   flex: 0 0 auto;
   background: transparent;
-  border: 1px solid var(--inv-rule-strong, rgba(242, 230, 204, 0.55));
+  border: 1px solid var(--inv-dot-ring, rgba(242, 230, 204, 0.55));
   transition: all 0.35s ease;
 }
 
@@ -303,12 +333,7 @@ html.invite-html body {
   transition: opacity 0.6s ease;
 }
 
-.invite-intro {
-  background: radial-gradient(ellipse at 50% 52%, rgba(18, 12, 10, 0.34) 0%, rgba(18, 12, 10, 0.12) 46%, rgba(18, 12, 10, 0) 74%);
-}
-
 .invite-outro {
-  background: radial-gradient(ellipse at 50% 52%, rgba(10, 8, 14, 0.42) 0%, rgba(10, 8, 14, 0.16) 48%, rgba(10, 8, 14, 0) 76%);
   opacity: 0;
   pointer-events: none;
 }
@@ -323,16 +348,22 @@ html.invite-html body {
 
 .invite.has-started .invite-intro-inner { animation: none; }
 
+/* the design sets this at 80px; it scales down so "Okay, here's"
+   still fits on one line on a phone */
 .invite-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
   font-family: "Faire-Sprig", Georgia, serif;
   font-weight: 600;
-  font-size: clamp(54px, min(13vw, 15vh), 150px);
+  font-size: clamp(40px, min(12vw, 10vh), 80px);
   line-height: 0.92;
   letter-spacing: -0.012em;
   white-space: nowrap;
 }
 
-.invite-names .invite-name--groom { color: #751015; }
+.invite-names .invite-names-lead { color: #751015; }
 
 .invite-date {
   font-family: "Faire-Sprig", Georgia, serif;
@@ -352,6 +383,8 @@ html.invite-html body {
   opacity: 0.92;
   white-space: nowrap;
 }
+
+.invite.is-light .invite-venue { opacity: 1; }
 
 .invite-btn {
   display: inline-block;
@@ -387,13 +420,15 @@ html.invite-html body {
 
 .invite-cue-text {
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--inv-ink-soft, rgba(242, 230, 204, 0.66));
   opacity: 0.92;
 }
+
+.invite.is-light .invite-cue-text { opacity: 1; }
 
 .invite-cue-text .invite-cue-lead { letter-spacing: 2.6px; }
 

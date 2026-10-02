@@ -5,15 +5,18 @@
 // value — t, from 0 to 1 — drives everything:
 //
 //   t  ->  hour of the weekend   (CLOCK)
-//   hour -> the sun's height     (sine between sunrise and sunset)
-//   height -> the colour of the sky   (SKY)
+//   hour -> which event is on    (EVENTS' hIn / hOut)
+//   event -> the colour of the field   (FIELD)
 //
-// Everything else follows: the ink flips from deep red to cream
-// when the sky goes dark, cards fade in over the hours they
-// actually happen, and the rail fills as the weekend passes.
+// Everything else follows: each event holds its own flat colour
+// for its hours and blends into the next in the gap between them,
+// the ink flips from deep red to cream as the field darkens, cards
+// fade in over the hours they actually happen, and the rail fills
+// as the weekend passes.
 //
-// The CLOCK, SKY and EVENTS numbers are the design's own and are
-// carried over unchanged. Content (names, dress codes, the card
+// The CLOCK, FIELD and EVENTS numbers are the design's own ("Two
+// Suns - Solid Colors"), carried over with its default colour
+// picks baked in. Content (names, dress codes, the card
 // transcripts) lives in invite.html; only timing and artwork are
 // here.
 // ============================================================
@@ -28,34 +31,32 @@
 
   // t -> hour. Hours run past 24 into Sunday (24 = midnight, 42.5 = 6:30 PM Sunday).
   var CLOCK = [
-    [0, 12], [0.08, 16], [0.22, 17.5], [0.365, 19.5], [0.47, 24],
-    [0.55, 29], [0.665, 34], [0.86, 42.5], [1.0, 50]
+    [0, 12], [0.08, 15.5], [0.22, 17.5], [0.365, 19.5], [0.47, 24],
+    [0.55, 29], [0.665, 33], [0.86, 41], [1.0, 50]
   ];
 
-  // Sun height -> [top of sky, bottom of sky]. The light of the day is the
-  // only thing the background does: no sun, no moon, no stars, no clouds.
-  var SKY = [
-    [-0.40, [14, 17, 30], [24, 22, 33]],
-    [-0.18, [22, 28, 52], [58, 38, 46]],
-    [-0.06, [46, 56, 92], [150, 74, 58]],
-    [0.01, [86, 102, 138], [222, 130, 74]],
-    [0.09, [116, 138, 172], [236, 172, 106]],
-    [0.30, [140, 166, 194], [235, 208, 162]],
-    [0.65, [146, 174, 202], [232, 218, 188]],
-    [1.00, [136, 166, 198], [226, 214, 184]]
-  ];
+  // The field behind the cards: one flat colour per event, no sun, moon,
+  // stars or clouds. The opening sits on linen; the close returns to the
+  // original night sky, the one place a gradient survives.
+  var FIELD = {
+    open: [238, 228, 210],   // linen
+    end: { top: [14, 17, 30], bottom: [24, 22, 33] }
+  };
 
   // Artwork ratios are the images' true dimensions, so nothing is stretched.
   var EVENTS = [
     { id: 'act1', t0: 0.01, t1: 0.15, hIn: 12.4, hOut: 17.5, ratio: 2000 / 1400,
+      color: [40, 127, 63],    // sage
       img: 'assets/invite/mapusa.jpg', back: 'assets/invite/mapusa_back.jpg' },
     { id: 'act2', t0: 0.29, t1: 0.44, hIn: 19, hOut: 23, ratio: 2000 / 1404,
+      color: [51, 0, 0],       // #330000
       img: 'assets/invite/aiburo.jpg', back: 'assets/invite/aiburo_back.jpg' },
-    // the ceremony is the centrepiece, so its card runs larger than the rest
-    { id: 'wedding', t0: 0.59, t1: 0.74, hIn: 31, hOut: 37, ratio: 2000 / 2800, portrait: true, grow: 1.12,
-      img: 'assets/invite/wedding.jpg', back: null },
+    { id: 'wedding', t0: 0.59, t1: 0.74, hIn: 31, hOut: 37, ratio: 2000 / 1404,
+      color: [56, 24, 52],     // aubergine
+      img: 'assets/invite/wedding.jpg', back: 'assets/invite/wedding_back.jpg' },
     { id: 'party', t0: 0.79, t1: 0.93, hIn: 40, hOut: 48, ratio: 2000 / 1384,
-      img: 'assets/invite/afterparty.jpg', back: null }
+      color: [27, 3, 3],       // coffee bean
+      img: 'assets/invite/sundowner.jpg', back: 'assets/invite/sundowner_back.jpg' }
   ];
 
   var DRESS_IMG = 'assets/invite/dress_code.jpg';
@@ -69,7 +70,6 @@
   // ----------------------------------------------------------
 
   var sky = root.querySelector('.invite-sky');
-  var haze = root.querySelector('.invite-haze');
   var dayLabel = document.getElementById('inviteDay');
   var timeLabel = document.getElementById('inviteTime');
   var clock = root.querySelector('.invite-clock');
@@ -120,18 +120,33 @@
     return 1;
   }
 
-  function skyAt(alt) {
-    for (var i = 0; i < SKY.length - 1; i++) {
-      if (alt <= SKY[i + 1][0]) {
-        var p = clamp((alt - SKY[i][0]) / (SKY[i + 1][0] - SKY[i][0]), 0, 1);
-        return {
-          top: mix(SKY[i][1], SKY[i + 1][1], p),
-          bottom: mix(SKY[i][2], SKY[i + 1][2], p)
-        };
+  // Each event holds its colour from hIn to hOut and blends to the next
+  // through the gap between them. The last one lets go a little early so
+  // the night sky is fully in before the closing words arrive.
+  var fieldKeys = (function () {
+    var flat = function (c) { return { top: c, bottom: c }; };
+    var keys = [[0, flat(FIELD.open)]];
+    EVENTS.forEach(function (v, i) {
+      var last = i === EVENTS.length - 1;
+      var tOut = tAtHour(v.hOut);
+      keys.push([tAtHour(v.hIn), flat(v.color)]);
+      keys.push([last ? Math.min(tOut, 0.935) : tOut, flat(v.color)]);
+    });
+    keys.push([0.965, FIELD.end], [1, FIELD.end]);
+    return keys;
+  })();
+
+  function fieldAt(t) {
+    for (var i = 0; i < fieldKeys.length - 1; i++) {
+      if (t <= fieldKeys[i + 1][0]) {
+        var span = fieldKeys[i + 1][0] - fieldKeys[i][0];
+        var k = span > 0 ? clamp((t - fieldKeys[i][0]) / span, 0, 1) : 1;
+        k = k * k * (3 - 2 * k);
+        var a = fieldKeys[i][1], b = fieldKeys[i + 1][1];
+        return { top: mix(a.top, b.top, k), bottom: mix(a.bottom, b.bottom, k) };
       }
     }
-    var last = SKY[SKY.length - 1];
-    return { top: last[1], bottom: last[2] };
+    return FIELD.end;
   }
 
   function mix(a, b, p) {
@@ -180,7 +195,7 @@
   }
 
   // Artwork is only fetched as its card approaches, so opening the
-  // invitation costs one image, not seven.
+  // invitation costs one image, not nine.
   function ensureImages(v) {
     if (v.loaded) return;
     v.loaded = true;
@@ -206,20 +221,21 @@
     var hd = ((H % 24) + 24) % 24;
     var day2 = H >= 24;
 
+    // the sun no longer paints the sky, but it still deepens the card shadows at night
     var RISE = 6.6, SET = 18.3;
     var sunAlt = Math.sin(Math.PI * (hd - RISE) / (SET - RISE));
-    var up = sunAlt > 0;
-    var s = skyAt(clamp(sunAlt, -0.4, 1));
     var night = clamp(-sunAlt * 3.2, 0, 1);
-    var low = up ? clamp(1 - sunAlt / 0.22, 0, 1) : 1;
+    var s = fieldAt(t);
 
-    // Ink follows the sky: deep red by day, cream once it darkens.
+    // Ink follows the field: solid deep red on light colours, cream on dark.
     var lum = (0.299 * s.bottom[0] + 0.587 * s.bottom[1] + 0.114 * s.bottom[2]) / 255;
     var bright = lum > 0.56;
     var ink = bright ? '#751015' : '#f2e6cc';
-    var inkSoft = bright ? 'rgba(117,16,21,0.62)' : 'rgba(242,230,204,0.66)';
-    var rule = bright ? 'rgba(117,16,21,0.22)' : 'rgba(242,230,204,0.22)';
-    var ruleStrong = bright ? 'rgba(117,16,21,0.5)' : 'rgba(242,230,204,0.55)';
+    var inkSoft = bright ? '#751015' : 'rgba(242,230,204,0.66)';
+    var rule = bright ? 'rgba(117,16,21,0.4)' : 'rgba(242,230,204,0.22)';
+    var ruleStrong = bright ? 'rgba(117,16,21,0.4)' : 'rgba(242,230,204,0.45)';
+    var dotRing = bright ? 'rgba(117,16,21,0.85)' : 'rgba(242,230,204,0.55)';
+    root.classList.toggle('is-light', bright);
 
     var vw = window.innerWidth;
     var vh = window.innerHeight;
@@ -250,6 +266,7 @@
     root.style.setProperty('--inv-ink-soft', inkSoft);
     root.style.setProperty('--inv-rule', rule);
     root.style.setProperty('--inv-rule-strong', ruleStrong);
+    root.style.setProperty('--inv-dot-ring', dotRing);
     root.style.setProperty('--inv-accent', ACCENT);
     root.style.setProperty('--inv-gutter', sideGutter + 'px');
     root.style.setProperty('--inv-rail-right', railRight + 'px');
@@ -264,17 +281,16 @@
     );
 
     root.style.background = rgb(s.bottom);
-    sky.style.background = 'linear-gradient(' + rgb(s.top) + ' 0%, ' + rgb(s.top) + ' 22%, ' +
-      rgb(s.bottom) + ' 78%, ' + rgb(mix(s.bottom, [0, 0, 0], 0.1)) + ' 100%)';
-    haze.style.background = 'linear-gradient(to top, rgba(' + s.bottom.join(',') + ',0.85) 0%, ' +
-      'rgba(255,206,146,' + (low * 0.26 * (up ? 1 : 0.35)) + ') 36%, rgba(255,206,146,0) 100%)';
+    sky.style.background = 'linear-gradient(' + rgb(s.top) + ', ' + rgb(s.bottom) + ')';
 
     var hh = Math.floor(hd);
     var mm = Math.floor((hd % 1) * 60);
     dayLabel.textContent = day2 ? 'Sunday 22 November' : 'Saturday 21 November';
     timeLabel.textContent = (((hh + 11) % 12) + 1) + ':' + String(mm).padStart(2, '0') +
       ' ' + (hh >= 12 ? 'PM' : 'AM');
-    clock.style.opacity = 0.76 * (1 - clamp((t - 0.955) / 0.028, 0, 1));
+    // the clock waits for the weekend to begin and bows out before the close
+    clock.style.opacity = (1 - clamp((t - 0.955) / 0.028, 0, 1)) *
+      (state.started ? clamp((t - 0.004) / 0.02, 0, 1) : 0);
 
     // ---- cards ----
     EVENTS.forEach(function (v, idx) {
@@ -307,14 +323,10 @@
       var flipped = !!(v.back && state.flipped[v.id]);
       var live = !!v.back && on && smooth > 0.7;
 
-      // A card fills whatever the viewport spares it, portrait cards being
-      // the taller and narrower of the two. `grow` lets one card run larger
-      // than the design's default; the extra cap then keeps it from crowding
-      // the dress-code line beneath it on short screens.
-      var grow = v.grow || 1;
-      var maxW = Math.min((v.portrait ? 775 : 1012) * grow, vw - sideGutter * 2);
-      var maxH = clamp((vh * 0.84 - (v.portrait ? 110 : 200)) * grow, 160, 875);
-      if (grow > 1) maxH = Math.min(maxH, vh * 0.86 - 48);
+      // A card fills whatever the viewport spares it, leaving room for the
+      // dress-code lines beneath.
+      var maxW = Math.min(1012, vw - sideGutter * 2);
+      var maxH = clamp(vh * 0.84 - 200, 160, 875);
       var w = Math.round(Math.min(maxW, maxH * v.ratio));
 
       v.el.style.opacity = smooth;
@@ -452,28 +464,18 @@
   // ----------------------------------------------------------
 
   EVENTS.forEach(function (v) {
-    if (!v.back) return;
-    var flip = function () {
-      if (state.moved >= 8) return;
-      state.flipped[v.id] = !state.flipped[v.id];
-      schedule();
-    };
-    v.flipper.addEventListener('pointerup', flip);
-    if (v.hint) {
-      v.hint.addEventListener('click', flip);
-      v.flipper.classList.add('is-flippable');
+    if (v.back) {
+      var flip = function () {
+        if (state.moved >= 8) return;
+        state.flipped[v.id] = !state.flipped[v.id];
+        schedule();
+      };
+      v.flipper.addEventListener('pointerup', flip);
+      if (v.hint) {
+        v.hint.addEventListener('click', flip);
+        v.flipper.classList.add('is-flippable');
+      }
     }
-    v.dot.addEventListener('pointerup', function () {
-      if (state.moved < 8) glide((v.t0 + v.t1) / 2);
-    });
-    v.dot.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); glide((v.t0 + v.t1) / 2); }
-    });
-  });
-
-  // dots for cards without a flip side still navigate
-  EVENTS.forEach(function (v) {
-    if (v.back) return;
     v.dot.addEventListener('pointerup', function () {
       if (state.moved < 8) glide((v.t0 + v.t1) / 2);
     });
