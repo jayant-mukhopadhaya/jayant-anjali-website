@@ -185,10 +185,13 @@
   }
 
   var raf = null;
+  var heading = null;   // the resting point a glide is on its way to
 
   function glide(target) {
     if (raf) cancelAnimationFrame(raf);
+    heading = null;
     if (reduceMotion) { set(target, true); return; }
+    heading = target;
     var from = state.t;
     var start = performance.now();
     var dur = 900 + Math.abs(target - from) * 700;
@@ -197,6 +200,7 @@
       var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
       set(from + (target - from) * e, true);
       if (p < 1) raf = requestAnimationFrame(step);
+      else heading = null;
     };
     raf = requestAnimationFrame(step);
   }
@@ -207,9 +211,11 @@
   // whose opening slope is the finger's, capped so it never overshoots.
   function glideFrom(target, v0) {
     if (raf) cancelAnimationFrame(raf);
+    heading = null;
     var from = state.t;
     var dist = target - from;
     if (reduceMotion || Math.abs(dist) < 0.0005) { set(target, true); return; }
+    heading = target;
     var speed = Math.max(0, v0 * (dist > 0 ? 1 : -1));
     var dur = speed > 0 ? 2 * Math.abs(dist) / speed : 0;
     if (!(dur >= 260)) dur = speed > 0 ? 260 : 320 + Math.abs(dist) * 1500;
@@ -221,6 +227,7 @@
       var e = (-2 * p * p * p + 3 * p * p) + m0 * (p * p * p - 2 * p * p + p);
       set(from + dist * e, true);
       if (p < 1) raf = requestAnimationFrame(step);
+      else heading = null;
     };
     raf = requestAnimationFrame(step);
   }
@@ -451,6 +458,7 @@
 
   root.addEventListener('pointerdown', function (e) {
     if (raf) cancelAnimationFrame(raf);
+    heading = null;
     startY = e.clientY;
     startT = state.t;
     samples = [{ y: e.clientY, time: e.timeStamp }];
@@ -506,10 +514,47 @@
   window.addEventListener('pointercancel', endDrag);
   window.addEventListener('blur', endDrag);
 
+  // A scroll flick steps one event, like a touch flick. A trackpad flick
+  // arrives as a burst of wheel events and then coasts for a second or
+  // more, so a burst counts as one flick: its first ~70ms set the
+  // direction and speed, and the rest is ignored until the wheel goes
+  // quiet (200ms), turns around, or surges again (a fresh flick landing
+  // on the coast). A flick made mid-glide steps on from where that glide
+  // was headed. The glide then starts at the flick's speed, read on the
+  // same scale as a touch drag.
+  var wheel = { last: -1e9, start: 0, dir: 0, abs: 0, sum: 0, collecting: false };
+  var WHEEL_WINDOW = 70;
+
+  function wheelFlick() {
+    wheel.collecting = false;
+    var v = wheel.sum / WHEEL_WINDOW / (window.innerHeight * DRAG_SCALE);
+    glideFrom(nextStop(heading !== null ? heading : state.t, wheel.dir), v);
+  }
+
   root.addEventListener('wheel', function (e) {
     e.preventDefault();
-    if (raf) cancelAnimationFrame(raf);
-    set(state.t + e.deltaY / 2600, true);
+    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+    if (!dy) return;
+    var now = e.timeStamp;
+    var abs = Math.abs(dy);
+    var dir = dy > 0 ? 1 : -1;
+    var gap = now - wheel.last;
+    wheel.last = now;
+    if (wheel.collecting) {
+      if (dir === wheel.dir) wheel.sum += dy;
+      wheel.abs = abs;
+      return;
+    }
+    var fresh = gap > 200 ||
+      (dir !== wheel.dir && abs > 4) ||
+      (now - wheel.start > 350 && abs > wheel.abs * 1.6 + 6);
+    wheel.abs = abs;
+    if (!fresh) return;
+    wheel.dir = dir;
+    wheel.start = now;
+    wheel.sum = dy;
+    wheel.collecting = true;
+    setTimeout(wheelFlick, WHEEL_WINDOW);
   }, { passive: false });
 
   function menuOpen() { return menu && !menu.hasAttribute('hidden'); }
