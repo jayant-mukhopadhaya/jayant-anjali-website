@@ -59,8 +59,12 @@
       img: 'assets/invite/sundowner.jpg', back: 'assets/invite/sundowner_back.jpg' }
   ];
 
-  var GLANCE_IMG = 'assets/invite/schedule.jpg';
-  var GLANCE_RATIO = 2000 / 1404;
+  // The schedule card comes in two shapes: wide for landscape screens,
+  // tall for phones held upright, where the wide card's text is too small.
+  var GLANCE = {
+    wide: { img: 'assets/invite/schedule.jpg', ratio: 2000 / 1404, fill: 0.78 },
+    tall: { img: 'assets/invite/schedule_portrait.jpg', ratio: 1000 / 2147, fill: 0.82 }
+  };
   var ACCENT = '#d8c08a';
 
   var state = { t: 0, dragging: false, started: false, moved: 0, flipped: {}, glance: false };
@@ -203,12 +207,12 @@
     if (v.back) v.backEl.style.backgroundImage = 'url(' + v.back + ')';
   }
 
-  var glanceLoaded = false;
+  var glanceShown = null;
 
-  function ensureGlance() {
-    if (glanceLoaded) return;
-    glanceLoaded = true;
-    glanceCard.style.backgroundImage = 'url(' + GLANCE_IMG + ')';
+  function ensureGlance(g) {
+    if (glanceShown === g) return;
+    glanceShown = g;
+    glanceCard.style.backgroundImage = 'url(' + g.img + ')';
   }
 
   // ----------------------------------------------------------
@@ -379,10 +383,11 @@
     // ---- schedule at a glance ----
     var glanceOn = state.glance && t > 0.955;
     if (glanceOn) {
-      ensureGlance();
-      var gw = Math.min(vw * 0.92, vh * 0.78 * GLANCE_RATIO, 1100);
+      var g = vw < vh ? GLANCE.tall : GLANCE.wide;
+      ensureGlance(g);
+      var gw = Math.min(vw * 0.92, vh * g.fill * g.ratio, 1100);
       glanceCard.style.width = gw + 'px';
-      glanceCard.style.height = (gw / GLANCE_RATIO) + 'px';
+      glanceCard.style.height = (gw / g.ratio) + 'px';
       glance.removeAttribute('hidden');
     } else {
       glance.setAttribute('hidden', '');
