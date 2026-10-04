@@ -52,7 +52,7 @@
     .event {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
     .dot {
       width: 26px;
@@ -66,6 +66,7 @@
       width: 150px;
       height: 112px;
       margin: 58px 0 34px;
+      -webkit-mask-position: left center;
     }
     .time { font-size: 38px; }
     .name {
@@ -73,8 +74,8 @@
       margin-bottom: 18px;
       text-wrap: balance;
     }
-    /* v3b: the time, name, description and dress code all sit flush
-       left; the dot and motif stay centred on the timeline */
+    /* v3b: everything in an event column sits flush left, from the
+       dot on the timeline down to the dress code */
     .time,
     .name,
     .desc,
