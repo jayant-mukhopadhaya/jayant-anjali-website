@@ -198,6 +198,30 @@
     raf = requestAnimationFrame(step);
   }
 
+  // A touch release: start at the finger's own speed (v0, in t per ms)
+  // and ease to rest on the target. Constant deceleration takes 2D/v0 ms;
+  // the time is held to a sensible range and the curve is a Hermite ease
+  // whose opening slope is the finger's, capped so it never overshoots.
+  function glideFrom(target, v0) {
+    if (raf) cancelAnimationFrame(raf);
+    var from = state.t;
+    var dist = target - from;
+    if (reduceMotion || Math.abs(dist) < 0.0005) { set(target, true); return; }
+    var speed = Math.max(0, v0 * (dist > 0 ? 1 : -1));
+    var dur = speed > 0 ? 2 * Math.abs(dist) / speed : 0;
+    if (!(dur >= 260)) dur = speed > 0 ? 260 : 320 + Math.abs(dist) * 1500;
+    dur = Math.min(dur, 1100);
+    var m0 = Math.min(speed * dur / Math.abs(dist), 3);
+    var start = performance.now();
+    var step = function (now) {
+      var p = Math.min(1, (now - start) / dur);
+      var e = (-2 * p * p * p + 3 * p * p) + m0 * (p * p * p - 2 * p * p + p);
+      set(from + dist * e, true);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  }
+
   // Artwork is only fetched as its card approaches, so opening the
   // invitation costs one image, not nine.
   function ensureImages(v) {
@@ -414,13 +438,19 @@
     return STOPS.reduce(function (a, b) { return Math.abs(b - t) < Math.abs(a - t) ? b : a; });
   }
 
-  var startY = 0, startT = 0, samples = [];
+  // A touch gesture moves at most one event: it is held between the
+  // resting points either side of where it began.
+  var startY = 0, startT = 0, samples = [], touchy = false, lo = 0, hi = 1;
+  var DRAG_SCALE = 1.15;
 
   root.addEventListener('pointerdown', function (e) {
     if (raf) cancelAnimationFrame(raf);
     startY = e.clientY;
     startT = state.t;
     samples = [{ y: e.clientY, time: e.timeStamp }];
+    touchy = e.pointerType !== 'mouse';
+    lo = nextStop(startT, -1);
+    hi = nextStop(startT, 1);
     state.dragging = true;
     state.moved = 0;
     root.classList.add('is-dragging');
@@ -432,7 +462,9 @@
     state.moved = Math.max(state.moved, Math.abs(dy));
     samples.push({ y: e.clientY, time: e.timeStamp });
     while (samples.length > 2 && e.timeStamp - samples[0].time > 100) samples.shift();
-    set(startT + dy / (window.innerHeight * 1.15), Math.abs(dy) > 6);
+    var t = startT + dy / (window.innerHeight * DRAG_SCALE);
+    if (touchy) t = clamp(t, lo, hi);
+    set(t, Math.abs(dy) > 6);
   });
 
   // Finger speed over the last ~100ms, in px/ms; positive moves forward.
@@ -448,19 +480,15 @@
     if (!state.dragging) return;
     state.dragging = false;
     root.classList.remove('is-dragging');
-    // On touch, letting go settles on a resting point: a flick moves on
-    // to the next one in its direction, like an arrow key; a slow drag
-    // settles on whichever is closest. Taps (under 8px) are left alone.
-    // A short flick steps on from where it began, since the drag itself
-    // already carries t partway; a long drag steps on from where it ends.
-    if (e && e.type === 'pointerup' && e.pointerType !== 'mouse' && state.moved >= 8) {
+    // On touch, letting go settles on a resting point at the finger's
+    // speed: a flick goes on to the next one in its direction, like an
+    // arrow key, and a slow drag settles on whichever is closest. Either
+    // way it stays within one event of where it began. Taps (under 8px)
+    // are left alone.
+    if (e && e.type === 'pointerup' && touchy && state.moved >= 8) {
       var v = flickSpeed(e);
-      if (Math.abs(v) > 0.25) {
-        var short = Math.abs(startY - e.clientY) < window.innerHeight * 0.3;
-        glide(nextStop(short ? startT : state.t, v > 0 ? 1 : -1));
-      } else {
-        glide(nearestStop(state.t));
-      }
+      var target = Math.abs(v) > 0.25 ? (v > 0 ? hi : lo) : nearestStop(state.t);
+      glideFrom(target, v / (window.innerHeight * DRAG_SCALE));
       return;
     }
     schedule();
