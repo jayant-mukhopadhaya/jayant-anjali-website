@@ -1,0 +1,114 @@
+/* ============================================================
+   Schedule card drafts — shared by v1, v2 and v3.
+
+   Each draft is a 2000 x 1404 card, the same size and palette as
+   assets/invite/dress_code.jpg: cream stock, deep red ink, one
+   aubergine flower. render.js screenshots them to JPG.
+   ============================================================ */
+
+@font-face {
+  font-family: "Faire-Sprig";
+  src: url("../../assets/fonts/FAIRE-Sprig/FAIRE-Sprig-Trial-Variable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Faire-Sprig";
+  src: url("../../assets/fonts/FAIRE-Sprig/FAIRE-Sprig-Italic-Trial-Variable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: italic;
+}
+
+:root {
+  --cream: #f4ecd7;
+  --ink: #8e1f26;
+  --rule: #9a222e;
+  --flower: #6f1844;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--cream);
+}
+
+.card {
+  position: relative;
+  width: 2000px;
+  height: 1404px;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "Faire-Sprig", Georgia, serif;
+  font-weight: 370;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+p, h1, h2, h3 { margin: 0; }
+
+.title {
+  font-weight: 390;
+  font-size: 128px;
+  line-height: 1.04;
+  letter-spacing: -0.005em;
+}
+
+.flower {
+  display: block;
+  width: 92px;
+  height: 92px;
+  color: var(--flower);
+}
+
+.day {
+  font-weight: 600;
+  font-size: 27px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.name {
+  font-weight: 620;
+  font-size: 44px;
+  line-height: 1.2;
+}
+
+.time {
+  font-weight: 370;
+  font-size: 40px;
+  line-height: 1.3;
+}
+
+.desc {
+  font-size: 40px;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.wear {
+  font-style: italic;
+  font-size: 37px;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.wear-label {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 25px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-right: 0.5em;
+}
+
+.motif {
+  display: block;
+  background: var(--flower);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}

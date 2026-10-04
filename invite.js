@@ -59,11 +59,17 @@
       img: 'assets/invite/sundowner.jpg', back: 'assets/invite/sundowner_back.jpg' }
   ];
 
-  var DRESS_IMG = 'assets/invite/dress_code.jpg';
-  var DRESS_RATIO = 2000 / 1404;
+  // The schedule card comes in two shapes: wide for landscape screens,
+  // tall for phones held upright, where the wide card's text is too small.
+  var GLANCE = {
+    wide: { img: 'assets/invite/schedule.jpg', ratio: 2000 / 1404, fill: 0.75,
+            file: 'Jayant-and-Anjali-Schedule.jpg' },
+    tall: { img: 'assets/invite/schedule_portrait.jpg', ratio: 1000 / 2147, fill: 0.78,
+            file: 'Jayant-and-Anjali-Schedule-Phone.jpg' }
+  };
   var ACCENT = '#d8c08a';
 
-  var state = { t: 0, dragging: false, started: false, moved: 0, flipped: {}, dress: false };
+  var state = { t: 0, dragging: false, started: false, moved: 0, flipped: {}, glance: false };
 
   // ----------------------------------------------------------
   // Elements
@@ -78,8 +84,9 @@
   var intro = root.querySelector('.invite-intro');
   var introInner = root.querySelector('.invite-intro-inner');
   var outro = root.querySelector('.invite-outro');
-  var dress = root.querySelector('.invite-dress');
-  var dressCard = root.querySelector('.invite-dress-card');
+  var glance = root.querySelector('.invite-glance');
+  var glanceCard = root.querySelector('.invite-glance-card');
+  var glanceDownload = root.querySelector('.invite-glance-download');
   var menu = document.getElementById('mobileMenu');
 
   EVENTS.forEach(function (v) {
@@ -172,16 +179,19 @@
       state.started = true;
       root.classList.add('has-started');
     }
-    // the dress card belongs to the very end; leaving the end closes it
-    if (state.dress && state.t <= 0.955) state.dress = false;
+    // the schedule card belongs to the very end; leaving the end closes it
+    if (state.glance && state.t <= 0.955) state.glance = false;
     schedule();
   }
 
   var raf = null;
+  var heading = null;   // the resting point a glide is on its way to
 
   function glide(target) {
     if (raf) cancelAnimationFrame(raf);
+    heading = null;
     if (reduceMotion) { set(target, true); return; }
+    heading = target;
     var from = state.t;
     var start = performance.now();
     var dur = 900 + Math.abs(target - from) * 700;
@@ -190,6 +200,34 @@
       var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
       set(from + (target - from) * e, true);
       if (p < 1) raf = requestAnimationFrame(step);
+      else heading = null;
+    };
+    raf = requestAnimationFrame(step);
+  }
+
+  // A touch release: start at the finger's own speed (v0, in t per ms)
+  // and ease to rest on the target. Constant deceleration takes 2D/v0 ms;
+  // the time is held to a sensible range and the curve is a Hermite ease
+  // whose opening slope is the finger's, capped so it never overshoots.
+  function glideFrom(target, v0) {
+    if (raf) cancelAnimationFrame(raf);
+    heading = null;
+    var from = state.t;
+    var dist = target - from;
+    if (reduceMotion || Math.abs(dist) < 0.0005) { set(target, true); return; }
+    heading = target;
+    var speed = Math.max(0, v0 * (dist > 0 ? 1 : -1));
+    var dur = speed > 0 ? 2 * Math.abs(dist) / speed : 0;
+    if (!(dur >= 260)) dur = speed > 0 ? 260 : 320 + Math.abs(dist) * 1500;
+    dur = Math.min(dur, 1100);
+    var m0 = Math.min(speed * dur / Math.abs(dist), 3);
+    var start = performance.now();
+    var step = function (now) {
+      var p = Math.min(1, (now - start) / dur);
+      var e = (-2 * p * p * p + 3 * p * p) + m0 * (p * p * p - 2 * p * p + p);
+      set(from + dist * e, true);
+      if (p < 1) raf = requestAnimationFrame(step);
+      else heading = null;
     };
     raf = requestAnimationFrame(step);
   }
@@ -203,12 +241,15 @@
     if (v.back) v.backEl.style.backgroundImage = 'url(' + v.back + ')';
   }
 
-  var dressLoaded = false;
+  var glanceShown = null;
 
-  function ensureDress() {
-    if (dressLoaded) return;
-    dressLoaded = true;
-    dressCard.style.backgroundImage = 'url(' + DRESS_IMG + ')';
+  function ensureGlance(g) {
+    if (glanceShown === g) return;
+    glanceShown = g;
+    glanceCard.style.backgroundImage = 'url(' + g.img + ')';
+    // the download is whichever card is showing
+    glanceDownload.href = g.img;
+    glanceDownload.setAttribute('download', g.file);
   }
 
   // ----------------------------------------------------------
@@ -339,7 +380,7 @@
       v.text.style.transform = 'translateY(' + (d * -16) + 'px)';
 
       if (v.hint) {
-        v.hint.textContent = flipped ? 'Tap to go back' : 'Tap to read more';
+        v.hint.textContent = flipped ? 'Tap to go back' : 'Tap for details';
         v.hint.style.transform = 'translateY(' + (d * -30) + 'px)';
         v.hint.style.pointerEvents = live ? 'auto' : 'none';
         v.hint.setAttribute('aria-expanded', flipped ? 'true' : 'false');
@@ -376,16 +417,17 @@
     outro.style.visibility = outroOn ? 'visible' : 'hidden';
     outro.setAttribute('aria-hidden', outroOn ? 'false' : 'true');
 
-    // ---- dress code ----
-    var dressOn = state.dress && t > 0.955;
-    if (dressOn) {
-      ensureDress();
-      var dw = Math.min(vw * 0.92, vh * 0.78 * DRESS_RATIO, 1100);
-      dressCard.style.width = dw + 'px';
-      dressCard.style.height = (dw / DRESS_RATIO) + 'px';
-      dress.removeAttribute('hidden');
+    // ---- schedule at a glance ----
+    var glanceOn = state.glance && t > 0.955;
+    if (glanceOn) {
+      var g = vw < vh ? GLANCE.tall : GLANCE.wide;
+      ensureGlance(g);
+      var gw = Math.min(vw * 0.92, vh * g.fill * g.ratio, 1100);
+      glanceCard.style.width = gw + 'px';
+      glanceCard.style.height = (gw / g.ratio) + 'px';
+      glance.removeAttribute('hidden');
     } else {
-      dress.setAttribute('hidden', '');
+      glance.setAttribute('hidden', '');
     }
   }
 
@@ -393,12 +435,36 @@
   // Gestures
   // ----------------------------------------------------------
 
-  var startY = 0, startT = 0;
+  // The resting points: the opening, each event card fully in view, and
+  // the close. The arrow keys step between them, and so does a flick.
+  var STOPS = [0].concat(EVENTS.map(function (v) { return (v.t0 + v.t1) / 2; }), [1]);
+
+  function nextStop(t, dir) {
+    var pool = STOPS.filter(function (m) {
+      return dir > 0 ? m > t + 0.02 : m < t - 0.02;
+    });
+    if (!pool.length) return dir > 0 ? 1 : 0;
+    return dir > 0 ? Math.min.apply(null, pool) : Math.max.apply(null, pool);
+  }
+
+  function nearestStop(t) {
+    return STOPS.reduce(function (a, b) { return Math.abs(b - t) < Math.abs(a - t) ? b : a; });
+  }
+
+  // A touch gesture moves at most one event: it is held between the
+  // resting points either side of where it began.
+  var startY = 0, startT = 0, samples = [], touchy = false, lo = 0, hi = 1;
+  var DRAG_SCALE = 1.15;
 
   root.addEventListener('pointerdown', function (e) {
     if (raf) cancelAnimationFrame(raf);
+    heading = null;
     startY = e.clientY;
     startT = state.t;
+    samples = [{ y: e.clientY, time: e.timeStamp }];
+    touchy = e.pointerType !== 'mouse';
+    lo = nextStop(startT, -1);
+    hi = nextStop(startT, 1);
     state.dragging = true;
     state.moved = 0;
     root.classList.add('is-dragging');
@@ -408,13 +474,37 @@
     if (!state.dragging) return;
     var dy = startY - e.clientY;
     state.moved = Math.max(state.moved, Math.abs(dy));
-    set(startT + dy / (window.innerHeight * 1.15), Math.abs(dy) > 6);
+    samples.push({ y: e.clientY, time: e.timeStamp });
+    while (samples.length > 2 && e.timeStamp - samples[0].time > 100) samples.shift();
+    var t = startT + dy / (window.innerHeight * DRAG_SCALE);
+    if (touchy) t = clamp(t, lo, hi);
+    set(t, Math.abs(dy) > 6);
   });
 
-  function endDrag() {
+  // Finger speed over the last ~100ms, in px/ms; positive moves forward.
+  function flickSpeed(e) {
+    var first = samples[0];
+    if (!first) return 0;
+    var dt = e.timeStamp - first.time;
+    if (dt <= 0 || dt > 150) return 0;
+    return (first.y - e.clientY) / dt;
+  }
+
+  function endDrag(e) {
     if (!state.dragging) return;
     state.dragging = false;
     root.classList.remove('is-dragging');
+    // On touch, letting go settles on a resting point at the finger's
+    // speed: a flick goes on to the next one in its direction, like an
+    // arrow key, and a slow drag settles on whichever is closest. Either
+    // way it stays within one event of where it began. Taps (under 8px)
+    // are left alone.
+    if (e && e.type === 'pointerup' && touchy && state.moved >= 8) {
+      var v = flickSpeed(e);
+      var target = Math.abs(v) > 0.25 ? (v > 0 ? hi : lo) : nearestStop(state.t);
+      glideFrom(target, v / (window.innerHeight * DRAG_SCALE));
+      return;
+    }
     schedule();
   }
 
@@ -424,10 +514,47 @@
   window.addEventListener('pointercancel', endDrag);
   window.addEventListener('blur', endDrag);
 
+  // A scroll flick steps one event, like a touch flick. A trackpad flick
+  // arrives as a burst of wheel events and then coasts for a second or
+  // more, so a burst counts as one flick: its first ~70ms set the
+  // direction and speed, and the rest is ignored until the wheel goes
+  // quiet (200ms), turns around, or surges again (a fresh flick landing
+  // on the coast). A flick made mid-glide steps on from where that glide
+  // was headed. The glide then starts at the flick's speed, read on the
+  // same scale as a touch drag.
+  var wheel = { last: -1e9, start: 0, dir: 0, abs: 0, sum: 0, collecting: false };
+  var WHEEL_WINDOW = 70;
+
+  function wheelFlick() {
+    wheel.collecting = false;
+    var v = wheel.sum / WHEEL_WINDOW / (window.innerHeight * DRAG_SCALE);
+    glideFrom(nextStop(heading !== null ? heading : state.t, wheel.dir), v);
+  }
+
   root.addEventListener('wheel', function (e) {
     e.preventDefault();
-    if (raf) cancelAnimationFrame(raf);
-    set(state.t + e.deltaY / 2600, true);
+    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+    if (!dy) return;
+    var now = e.timeStamp;
+    var abs = Math.abs(dy);
+    var dir = dy > 0 ? 1 : -1;
+    var gap = now - wheel.last;
+    wheel.last = now;
+    if (wheel.collecting) {
+      if (dir === wheel.dir) wheel.sum += dy;
+      wheel.abs = abs;
+      return;
+    }
+    var fresh = gap > 200 ||
+      (dir !== wheel.dir && abs > 4) ||
+      (now - wheel.start > 350 && abs > wheel.abs * 1.6 + 6);
+    wheel.abs = abs;
+    if (!fresh) return;
+    wheel.dir = dir;
+    wheel.start = now;
+    wheel.sum = dy;
+    wheel.collecting = true;
+    setTimeout(wheelFlick, WHEEL_WINDOW);
   }, { passive: false });
 
   function menuOpen() { return menu && !menu.hasAttribute('hidden'); }
@@ -435,24 +562,16 @@
   window.addEventListener('keydown', function (e) {
     if (menuOpen()) return;
     var k = e.key;
-    var nearest = function (dir) {
-      var marks = EVENTS.map(function (v) { return (v.t0 + v.t1) / 2; });
-      var pool = marks.filter(function (m) {
-        return dir > 0 ? m > state.t + 0.02 : m < state.t - 0.02;
-      });
-      if (!pool.length) return dir > 0 ? 1 : 0;
-      return dir > 0 ? Math.min.apply(null, pool) : Math.max.apply(null, pool);
-    };
     if (k === 'ArrowDown' || k === 'ArrowRight' || k === 'PageDown' || k === ' ') {
-      e.preventDefault(); glide(nearest(1));
+      e.preventDefault(); glide(nextStop(state.t, 1));
     } else if (k === 'ArrowUp' || k === 'ArrowLeft' || k === 'PageUp') {
-      e.preventDefault(); glide(nearest(-1));
+      e.preventDefault(); glide(nextStop(state.t, -1));
     } else if (k === 'Home') {
       e.preventDefault(); glide(0);
     } else if (k === 'End') {
       e.preventDefault(); glide(1);
-    } else if (k === 'Escape' && state.dress) {
-      state.dress = false; schedule();
+    } else if (k === 'Escape' && state.glance) {
+      state.glance = false; schedule();
     }
   });
 
@@ -492,20 +611,23 @@
     glide(0);
   });
 
-  root.querySelector('[data-action="dress"]').addEventListener('click', function () {
+  root.querySelector('[data-action="glance"]').addEventListener('click', function () {
     if (state.moved >= 8) return;
-    state.dress = true;
+    state.glance = true;
     schedule();
   });
 
-  dress.addEventListener('pointerup', function () {
-    state.dress = false;
+  // the download button keeps the card open; anywhere else closes it
+  glanceDownload.addEventListener('pointerup', function (e) { e.stopPropagation(); });
+
+  glance.addEventListener('pointerup', function () {
+    state.glance = false;
     schedule();
   });
 
   // the overlay swallows gestures so the timeline doesn't move behind it
   ['pointerdown', 'pointermove', 'wheel'].forEach(function (type) {
-    dress.addEventListener(type, function (e) {
+    glance.addEventListener(type, function (e) {
       e.stopPropagation();
       if (e.cancelable) e.preventDefault();
     }, { passive: false });

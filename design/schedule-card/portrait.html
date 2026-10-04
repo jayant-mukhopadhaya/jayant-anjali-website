@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Schedule card · portrait (phones)</title>
+  <link rel="stylesheet" href="card.css" />
+  <style>
+    /* portrait — v3b turned on its side for phones. The red timeline
+       runs down the left edge with a dot centred on each motif; the
+       day headings and text sit flush left beside it. */
+    .card {
+      width: 1000px;
+      height: auto;
+      padding-top: 84px;
+    }
+    .top { text-align: center; }
+    .title {
+      font-size: 120px;
+      line-height: 1;
+    }
+    .sub {
+      margin-top: 30px;
+      font-size: 40px;
+      line-height: 1.3;
+    }
+    .timeline {
+      position: relative;
+      margin-top: 76px;
+      padding: 0 56px 70px 0;
+    }
+    .line {
+      position: absolute;
+      left: 78px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--rule);
+    }
+    .day {
+      margin: 0 0 26px 136px;
+    }
+    .event + .day { margin-top: 18px; }
+    .event {
+      position: relative;
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      column-gap: 34px;
+      margin: 0 0 50px 136px;
+    }
+    .dot {
+      position: absolute;
+      left: -71px;
+      top: 49px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--rule);
+      box-shadow: 0 0 0 10px var(--cream);
+    }
+    /* each motif centres in a 124px cell, so the dot (49px + 13px
+       down) sits level with its middle */
+    .cell {
+      height: 124px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .motif {
+      flex: none;
+      height: 124px;
+      background: var(--ink);
+    }
+    .time { font-size: 38px; }
+    .name {
+      font-size: 44px;
+      margin-bottom: 14px;
+    }
+    .desc { font-size: 36px; }
+    .wear {
+      font-size: 34px;
+      margin-top: 14px;
+    }
+    .nowrap { white-space: nowrap; }
+    .wear-label {
+      font-size: inherit;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin-right: 0.35em;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <h1 class="title">The Schedule</h1>
+      <p class="sub">21&ndash;22 November 2026<br>Aashyana Lakhanpal, Goa</p>
+    </div>
+
+    <div class="timeline">
+      <div class="line"></div>
+
+      <p class="day">Saturday, 21 November</p>
+      <div class="event">
+        <span class="dot"></span>
+        <div class="cell"><span class="motif" style="width:104px;height:144px;-webkit-mask-image:url('../../assets/motifs/chillies.png')"></span></div>
+        <div>
+          <p class="time">3:30&ndash;6:00 PM</p>
+          <h2 class="name">Mapusa in the Garden</h2>
+          <p class="desc">A vibrant and whimsical start to the weekend. Expect mehendi, games and light bites.</p>
+          <p class="wear"><span class="wear-label">Wear</span>Vibrant <span class="nowrap">semi-formal</span>. Pick the boldest, brightest attire from your closet.</p>
+        </div>
+      </div>
+      <div class="event">
+        <span class="dot"></span>
+        <div class="cell"><span class="motif" style="width:91px;-webkit-mask-image:url('../../assets/motifs/branch.png')"></span></div>
+        <div>
+          <p class="time">7:30 PM onwards</p>
+          <h2 class="name">Aiburo Bhaat</h2>
+          <p class="desc">The big Bengali feast before the wedding.</p>
+          <p class="wear"><span class="wear-label">Wear</span>Formal evening wear in deep, jewel tones.</p>
+        </div>
+      </div>
+
+      <p class="day">Sunday, 22 November</p>
+      <div class="event">
+        <span class="dot"></span>
+        <div class="cell"><span class="motif" style="width:136px;-webkit-mask-image:url('../../assets/motifs/bird.png')"></span></div>
+        <div>
+          <p class="time">9:00 AM&ndash;2:00 PM</p>
+          <h2 class="name">Wedding</h2>
+          <p class="desc">Baraat, followed by the wedding ceremony, ending with a traditional oota (feast).</p>
+          <p class="wear"><span class="wear-label">Wear</span>Pinks, peaches and whites. Indian formal encouraged.</p>
+        </div>
+      </div>
+      <div class="event">
+        <span class="dot"></span>
+        <div class="cell"><span class="motif" style="width:88px;-webkit-mask-image:url('../../assets/motifs/dancer.png')"></span></div>
+        <div>
+          <p class="time">5:00 PM onwards</p>
+          <h2 class="name">Sundowner Dance Party</h2>
+          <p class="desc">Watch the sun set over the ocean, then dance the night away.</p>
+          <p class="wear"><span class="wear-label">Wear</span>Anything that sparkles, shimmers or shines.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
