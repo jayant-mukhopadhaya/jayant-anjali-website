@@ -343,7 +343,7 @@
       v.text.style.transform = 'translateY(' + (d * -16) + 'px)';
 
       if (v.hint) {
-        v.hint.textContent = flipped ? 'Tap to go back' : 'Tap to read more';
+        v.hint.textContent = flipped ? 'Tap to go back' : 'Tap for details';
         v.hint.style.transform = 'translateY(' + (d * -30) + 'px)';
         v.hint.style.pointerEvents = live ? 'auto' : 'none';
         v.hint.setAttribute('aria-expanded', flipped ? 'true' : 'false');
@@ -398,12 +398,29 @@
   // Gestures
   // ----------------------------------------------------------
 
-  var startY = 0, startT = 0;
+  // The resting points: the opening, each event card fully in view, and
+  // the close. The arrow keys step between them, and so does a flick.
+  var STOPS = [0].concat(EVENTS.map(function (v) { return (v.t0 + v.t1) / 2; }), [1]);
+
+  function nextStop(t, dir) {
+    var pool = STOPS.filter(function (m) {
+      return dir > 0 ? m > t + 0.02 : m < t - 0.02;
+    });
+    if (!pool.length) return dir > 0 ? 1 : 0;
+    return dir > 0 ? Math.min.apply(null, pool) : Math.max.apply(null, pool);
+  }
+
+  function nearestStop(t) {
+    return STOPS.reduce(function (a, b) { return Math.abs(b - t) < Math.abs(a - t) ? b : a; });
+  }
+
+  var startY = 0, startT = 0, samples = [];
 
   root.addEventListener('pointerdown', function (e) {
     if (raf) cancelAnimationFrame(raf);
     startY = e.clientY;
     startT = state.t;
+    samples = [{ y: e.clientY, time: e.timeStamp }];
     state.dragging = true;
     state.moved = 0;
     root.classList.add('is-dragging');
@@ -413,13 +430,39 @@
     if (!state.dragging) return;
     var dy = startY - e.clientY;
     state.moved = Math.max(state.moved, Math.abs(dy));
+    samples.push({ y: e.clientY, time: e.timeStamp });
+    while (samples.length > 2 && e.timeStamp - samples[0].time > 100) samples.shift();
     set(startT + dy / (window.innerHeight * 1.15), Math.abs(dy) > 6);
   });
 
-  function endDrag() {
+  // Finger speed over the last ~100ms, in px/ms; positive moves forward.
+  function flickSpeed(e) {
+    var first = samples[0];
+    if (!first) return 0;
+    var dt = e.timeStamp - first.time;
+    if (dt <= 0 || dt > 150) return 0;
+    return (first.y - e.clientY) / dt;
+  }
+
+  function endDrag(e) {
     if (!state.dragging) return;
     state.dragging = false;
     root.classList.remove('is-dragging');
+    // On touch, letting go settles on a resting point: a flick moves on
+    // to the next one in its direction, like an arrow key; a slow drag
+    // settles on whichever is closest. Taps (under 8px) are left alone.
+    // A short flick steps on from where it began, since the drag itself
+    // already carries t partway; a long drag steps on from where it ends.
+    if (e && e.type === 'pointerup' && e.pointerType !== 'mouse' && state.moved >= 8) {
+      var v = flickSpeed(e);
+      if (Math.abs(v) > 0.25) {
+        var short = Math.abs(startY - e.clientY) < window.innerHeight * 0.3;
+        glide(nextStop(short ? startT : state.t, v > 0 ? 1 : -1));
+      } else {
+        glide(nearestStop(state.t));
+      }
+      return;
+    }
     schedule();
   }
 
@@ -440,18 +483,10 @@
   window.addEventListener('keydown', function (e) {
     if (menuOpen()) return;
     var k = e.key;
-    var nearest = function (dir) {
-      var marks = EVENTS.map(function (v) { return (v.t0 + v.t1) / 2; });
-      var pool = marks.filter(function (m) {
-        return dir > 0 ? m > state.t + 0.02 : m < state.t - 0.02;
-      });
-      if (!pool.length) return dir > 0 ? 1 : 0;
-      return dir > 0 ? Math.min.apply(null, pool) : Math.max.apply(null, pool);
-    };
     if (k === 'ArrowDown' || k === 'ArrowRight' || k === 'PageDown' || k === ' ') {
-      e.preventDefault(); glide(nearest(1));
+      e.preventDefault(); glide(nextStop(state.t, 1));
     } else if (k === 'ArrowUp' || k === 'ArrowLeft' || k === 'PageUp') {
-      e.preventDefault(); glide(nearest(-1));
+      e.preventDefault(); glide(nextStop(state.t, -1));
     } else if (k === 'Home') {
       e.preventDefault(); glide(0);
     } else if (k === 'End') {
