@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Schedule card · v1 Mirror</title>
+  <link rel="stylesheet" href="card.css" />
+  <style>
+    /* v1 — Mirror: the Dress Code card's own layout, line for line.
+       Title panel left, red rule, the weekend down the right. */
+    .left {
+      position: absolute;
+      left: 94px;
+      top: 0;
+      bottom: 0;
+      width: 620px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .sub {
+      margin-top: 110px;
+      font-size: 45px;
+      line-height: 1.24;
+    }
+    .left .flower { margin-top: 120px; }
+    .rule {
+      position: absolute;
+      left: 793px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--rule);
+    }
+    .right {
+      position: absolute;
+      left: 968px;
+      right: 120px;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 64px;
+    }
+    .day { margin-bottom: 26px; }
+    .event + .event { margin-top: 38px; }
+    .head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .head .time { white-space: nowrap; }
+    .wear { margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="left">
+      <h1 class="title">The<br>Schedule</h1>
+      <p class="sub">21&ndash;22 November 2026<br>Aashyana Lakhanpal,<br>Goa</p>
+      <svg class="flower" viewBox="0 0 100 100" aria-hidden="true"><use href="#flower"/></svg>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="right">
+      <section>
+        <p class="day">Saturday, 21 November</p>
+        <div class="event">
+          <div class="head"><h2 class="name">Mapusa in the Garden</h2><p class="time">3:30&ndash;6:00 PM</p></div>
+          <p class="desc">A vibrant and whimsical start to the weekend. Expect mehendi, games and light bites.</p>
+          <p class="wear">Vibrant semi-formal. Pick the boldest, brightest attire from your closet.</p>
+        </div>
+        <div class="event">
+          <div class="head"><h2 class="name">Aiburo Bhaat</h2><p class="time">7:30 PM onwards</p></div>
+          <p class="desc">The final Bengali feast before the wedding.</p>
+          <p class="wear">Formal evening wear in deep, jewel tones.</p>
+        </div>
+      </section>
+
+      <section>
+        <p class="day">Sunday, 22 November</p>
+        <div class="event">
+          <div class="head"><h2 class="name">Wedding</h2><p class="time">9:00 AM&ndash;2:00 PM</p></div>
+          <p class="desc">Baraat, followed by the wedding ceremony, ending with a traditional oota (feast).</p>
+          <p class="wear">Pinks, peaches and whites. Indian formal encouraged.</p>
+        </div>
+        <div class="event">
+          <div class="head"><h2 class="name">Sundowner Dance Party</h2><p class="time">5:00 PM onwards</p></div>
+          <p class="desc">Watch the sun set over the ocean, then dance the night away.</p>
+          <p class="wear">Anything that sparkles, shimmers or shines.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="flower" viewBox="0 0 100 100">
+      <g fill="currentColor" transform="rotate(-14 50 50)">
+        <path id="petal" d="M50 45 C43 35 37 22 40 13 C43 4 57 4 60 13 C63 22 57 35 50 45 Z"/>
+        <use href="#petal" transform="rotate(60 50 50)"/>
+        <use href="#petal" transform="rotate(120 50 50)"/>
+        <use href="#petal" transform="rotate(180 50 50)"/>
+        <use href="#petal" transform="rotate(240 50 50)"/>
+        <use href="#petal" transform="rotate(300 50 50)"/>
+      </g>
+    </symbol>
+  </svg>
+</body>
+</html>
