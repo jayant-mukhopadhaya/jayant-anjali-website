@@ -47,11 +47,14 @@
             var error = document.getElementById('error');
 
             // Where to go once in: the page they were sent here from
-            // (?next=invite.html), or the homepage. Only a page of this
-            // site is accepted, never an outside address.
+            // (?next=invite.html, or ?next=invite when the link left off
+            // the .html, which GitHub Pages also serves), or the homepage.
+            // Only a page of this site is accepted, never an outside
+            // address, and never the login page itself.
             function destination() {
                 var next = new URLSearchParams(window.location.search).get('next') || '';
-                return /^[\w-]+\.html(#[\w-]*)?$/.test(next) && next !== 'login.html' ? next : 'index.html';
+                var page = /^([\w-]+)(\.html)?(#[\w-]*)?$/.exec(next);
+                return page && page[1] !== 'login' ? next : 'index.html';
             }
 
             function submit() {
