@@ -475,12 +475,23 @@ html.invite-html body {
   opacity: 0.8;
 }
 
+/* never one row: "Schedule at a glance" on top, the other two beneath */
 .invite-outro-btns {
-  display: flex;
-  gap: clamp(8px, 1.4vw, 16px);
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto auto;
   justify-content: center;
+  gap: clamp(8px, 1.4vw, 16px);
   margin-top: clamp(6px, 1.4vh, 14px);
+}
+
+.invite-outro-btns > :first-child {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
+/* too narrow for the pair: stack all three */
+@media (max-width: 339px) {
+  .invite-outro-btns { grid-template-columns: auto; }
 }
 
 .invite-glance {
