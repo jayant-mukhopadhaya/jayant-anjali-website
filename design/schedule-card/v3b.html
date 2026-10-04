@@ -29,7 +29,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 70px;
-      text-align: center;
     }
     .line {
       position: absolute;
@@ -62,11 +61,16 @@
       background: var(--rule);
       box-shadow: 0 0 0 10px var(--cream);
     }
+    /* the dot and motif share a marker, so the dot sits over the
+       middle of the motif; each motif's box is sized to its artwork */
+    .marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     .motif {
-      width: 150px;
       height: 112px;
       margin: 58px 0 34px;
-      -webkit-mask-position: left center;
     }
     .time { font-size: 38px; }
     .name {
@@ -75,7 +79,7 @@
       text-wrap: balance;
     }
     /* v3b: everything in an event column sits flush left, from the
-       dot on the timeline down to the dress code */
+       day heading and motif down to the dress code */
     .time,
     .name,
     .desc,
@@ -113,32 +117,40 @@
 
     <div class="events">
       <div class="event">
-        <span class="dot"></span>
-        <span class="motif" style="-webkit-mask-image:url('../../Indian%20Motif%20Exports/Radial_2.svg')"></span>
+        <div class="marker">
+          <span class="dot"></span>
+          <span class="motif" style="width:109px;-webkit-mask-image:url('../../Indian%20Motif%20Exports/Radial_2.svg')"></span>
+        </div>
         <p class="time">3:30&ndash;6:00 PM</p>
         <h2 class="name">Mapusa in the Garden</h2>
         <p class="desc">A vibrant and whimsical start to the weekend. Expect mehendi, games and light bites.</p>
         <p class="wear"><span class="wear-label">Wear</span>Vibrant <span class="nowrap">semi-formal</span>. Pick the boldest, brightest attire from your closet.</p>
       </div>
       <div class="event">
-        <span class="dot"></span>
-        <span class="motif" style="-webkit-mask-image:url('../../Indian%20Motif%20Exports/Fish.svg')"></span>
+        <div class="marker">
+          <span class="dot"></span>
+          <span class="motif" style="width:150px;-webkit-mask-image:url('../../Indian%20Motif%20Exports/Fish.svg')"></span>
+        </div>
         <p class="time">7:30 PM onwards</p>
         <h2 class="name">Aiburo Bhaat</h2>
         <p class="desc">The final Bengali feast before the wedding.</p>
         <p class="wear"><span class="wear-label">Wear</span>Formal evening wear in deep, jewel tones.</p>
       </div>
       <div class="event">
-        <span class="dot"></span>
-        <span class="motif" style="-webkit-mask-image:url('../../Indian%20Motif%20Exports/Lion_2.png')"></span>
+        <div class="marker">
+          <span class="dot"></span>
+          <span class="motif" style="width:119px;-webkit-mask-image:url('../../Indian%20Motif%20Exports/Lion_2.png')"></span>
+        </div>
         <p class="time">9:00 AM&ndash;2:00 PM</p>
         <h2 class="name">Wedding</h2>
         <p class="desc">Baraat, followed by the wedding ceremony, ending with a traditional oota (feast).</p>
         <p class="wear"><span class="wear-label">Wear</span>Pinks, peaches and whites. Indian formal encouraged.</p>
       </div>
       <div class="event">
-        <span class="dot"></span>
-        <span class="motif" style="-webkit-mask-image:url('../../Indian%20Motif%20Exports/Tiger.svg')"></span>
+        <div class="marker">
+          <span class="dot"></span>
+          <span class="motif" style="width:99px;-webkit-mask-image:url('../../Indian%20Motif%20Exports/Tiger.svg')"></span>
+        </div>
         <p class="time">5:00 PM onwards</p>
         <h2 class="name">Sundowner Dance Party</h2>
         <p class="desc">Watch the sun set over the ocean, then dance the night away.</p>
