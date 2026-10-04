@@ -349,8 +349,9 @@ html.invite-html body {
 .invite.has-started .invite-intro-inner { animation: none; }
 
 /* the design sets this at 80px; it scales down so "Okay, here's"
-   still fits on one line on a phone */
-.invite-names {
+   still fits on one line on a phone. The closing words wear the same. */
+.invite-names,
+.invite-outro-title {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -374,7 +375,8 @@ html.invite-html body {
   white-space: nowrap;
 }
 
-.invite-venue {
+.invite-venue,
+.invite-outro-meta {
   font-family: "Faire-Sprig", Georgia, serif;
   font-weight: 400;
   font-size: clamp(14px, min(2.5vw, 2.9vh), 28px);
@@ -384,7 +386,8 @@ html.invite-html body {
   white-space: nowrap;
 }
 
-.invite.is-light .invite-venue { opacity: 1; }
+.invite.is-light .invite-venue,
+.invite.is-light .invite-outro-meta { opacity: 1; }
 
 .invite-btn {
   display: inline-block;
@@ -449,15 +452,6 @@ html.invite-html body {
   width: min(640px, 88vw);
 }
 
-.invite-outro-title {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: clamp(36px, 5.6vw, 72px);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
 .invite-rule {
   width: 54px;
   height: 1px;
@@ -465,17 +459,6 @@ html.invite-html body {
   opacity: 0.35;
   margin: 4px 0 2px;
 }
-
-.invite-outro-meta {
-  font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
-.invite.is-light .invite-outro-meta { opacity: 1; }
 
 /* never one row: "Schedule at a glance" on top, the other two beneath */
 .invite-outro-btns {
