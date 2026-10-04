@@ -36,11 +36,11 @@
   ];
 
   // The field behind the cards: one flat colour per event, no sun, moon,
-  // stars or clouds. The opening sits on linen; the close returns to the
-  // original night sky, the one place a gradient survives.
+  // stars or clouds. The opening and the close both sit on linen, so the
+  // weekend ends on the same page it began.
   var FIELD = {
     open: [238, 228, 210],   // linen
-    end: { top: [14, 17, 30], bottom: [24, 22, 33] }
+    end: [238, 228, 210]     // linen
   };
 
   // Artwork ratios are the images' true dimensions, so nothing is stretched.
@@ -127,11 +127,12 @@
     return 1;
   }
 
+  function flat(c) { return { top: c, bottom: c }; }
+
   // Each event holds its colour from hIn to hOut and blends to the next
   // through the gap between them. The last one lets go a little early so
-  // the night sky is fully in before the closing words arrive.
+  // the linen is fully in before the closing words arrive.
   var fieldKeys = (function () {
-    var flat = function (c) { return { top: c, bottom: c }; };
     var keys = [[0, flat(FIELD.open)]];
     EVENTS.forEach(function (v, i) {
       var last = i === EVENTS.length - 1;
@@ -139,7 +140,7 @@
       keys.push([tAtHour(v.hIn), flat(v.color)]);
       keys.push([last ? Math.min(tOut, 0.935) : tOut, flat(v.color)]);
     });
-    keys.push([0.965, FIELD.end], [1, FIELD.end]);
+    keys.push([0.965, flat(FIELD.end)], [1, flat(FIELD.end)]);
     return keys;
   })();
 
@@ -153,7 +154,7 @@
         return { top: mix(a.top, b.top, k), bottom: mix(a.bottom, b.bottom, k) };
       }
     }
-    return FIELD.end;
+    return flat(FIELD.end);
   }
 
   function mix(a, b, p) {
