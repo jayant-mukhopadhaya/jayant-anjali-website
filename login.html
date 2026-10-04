@@ -46,11 +46,19 @@
             var pass  = document.getElementById('password');
             var error = document.getElementById('error');
 
+            // Where to go once in: the page they were sent here from
+            // (?next=invite.html), or the homepage. Only a page of this
+            // site is accepted, never an outside address.
+            function destination() {
+                var next = new URLSearchParams(window.location.search).get('next') || '';
+                return /^[\w-]+\.html(#[\w-]*)?$/.test(next) && next !== 'login.html' ? next : 'index.html';
+            }
+
             function submit() {
                 error.style.display = 'none';
                 if (pass.value === 'kokumsoda') {
                     sessionStorage.setItem('wedding_auth', 'true');
-                    window.location.href = 'index.html';
+                    window.location.replace(destination());
                 } else {
                     error.style.display = 'block';
                     pass.focus();
