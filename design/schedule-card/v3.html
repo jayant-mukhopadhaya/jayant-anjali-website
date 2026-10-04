@@ -12,7 +12,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      top: 130px;
+      top: 106px;
       text-align: center;
     }
     .top .title { line-height: 1; }
@@ -25,7 +25,7 @@
       position: absolute;
       left: 110px;
       right: 110px;
-      top: 482px;
+      top: 458px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 70px;
@@ -35,7 +35,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      top: 554px;
+      top: 530px;
       height: 4px;
       background: var(--rule);
     }
@@ -43,7 +43,7 @@
       position: absolute;
       left: 110px;
       right: 110px;
-      top: 556px;
+      top: 532px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       column-gap: 70px;
@@ -73,11 +73,24 @@
       margin-bottom: 18px;
       text-wrap: balance;
     }
-    .desc { font-size: 34px; text-wrap: balance; }
+    /* the description and dress code read as paragraphs, so they
+       sit flush left under the centred time, name and motif */
+    .desc,
+    .wear {
+      align-self: stretch;
+      text-align: left;
+    }
+    .desc { font-size: 34px; }
     .wear {
       font-size: 32px;
       margin-top: 18px;
-      text-wrap: balance;
+    }
+    .nowrap { white-space: nowrap; }
+    .wear-label {
+      font-size: inherit;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin-right: 0.35em;
     }
   </style>
 </head>
@@ -102,7 +115,7 @@
         <p class="time">3:30&ndash;6:00 PM</p>
         <h2 class="name">Mapusa in the Garden</h2>
         <p class="desc">A vibrant and whimsical start to the weekend. Expect mehendi, games and light bites.</p>
-        <p class="wear">Vibrant semi-formal. Pick the boldest, brightest attire from your closet.</p>
+        <p class="wear"><span class="wear-label">Wear</span>Vibrant <span class="nowrap">semi-formal</span>. Pick the boldest, brightest attire from your closet.</p>
       </div>
       <div class="event">
         <span class="dot"></span>
@@ -110,7 +123,7 @@
         <p class="time">7:30 PM onwards</p>
         <h2 class="name">Aiburo Bhaat</h2>
         <p class="desc">The final Bengali feast before the wedding.</p>
-        <p class="wear">Formal evening wear in deep, jewel tones.</p>
+        <p class="wear"><span class="wear-label">Wear</span>Formal evening wear in deep, jewel tones.</p>
       </div>
       <div class="event">
         <span class="dot"></span>
@@ -118,7 +131,7 @@
         <p class="time">9:00 AM&ndash;2:00 PM</p>
         <h2 class="name">Wedding</h2>
         <p class="desc">Baraat, followed by the wedding ceremony, ending with a traditional oota (feast).</p>
-        <p class="wear">Pinks, peaches and whites. Indian formal encouraged.</p>
+        <p class="wear"><span class="wear-label">Wear</span>Pinks, peaches and whites. Indian formal encouraged.</p>
       </div>
       <div class="event">
         <span class="dot"></span>
@@ -126,7 +139,7 @@
         <p class="time">5:00 PM onwards</p>
         <h2 class="name">Sundowner Dance Party</h2>
         <p class="desc">Watch the sun set over the ocean, then dance the night away.</p>
-        <p class="wear">Anything that sparkles, shimmers or shines.</p>
+        <p class="wear"><span class="wear-label">Wear</span>Anything that sparkles, shimmers or shines.</p>
       </div>
     </div>
   </div>
