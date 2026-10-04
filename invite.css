@@ -475,6 +475,8 @@ html.invite-html body {
   opacity: 0.8;
 }
 
+.invite.is-light .invite-outro-meta { opacity: 1; }
+
 /* never one row: "Schedule at a glance" on top, the other two beneath */
 .invite-outro-btns {
   display: grid;
