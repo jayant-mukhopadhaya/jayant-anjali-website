@@ -513,11 +513,56 @@ html.invite-html body {
 
 .invite-glance[hidden] { display: none; }
 
+/* on phones the card starts below the menu button */
+@media (max-width: 619px) {
+  .invite-glance { padding-top: 72px; }
+}
+
 .invite-glance-card {
   background-size: 100% 100%;
   background-repeat: no-repeat;
   border-radius: 3px;
   box-shadow: 0 34px 80px rgba(20, 10, 6, 0.5);
+}
+
+.invite-glance-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.invite-glance-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border: 1px solid rgba(242, 230, 204, 0.45);
+  border-radius: 40px;
+  color: #f2e6cc;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.invite-glance-download:hover { opacity: 0.7; }
+
+.invite-glance-download svg {
+  width: 13px;
+  height: 13px;
+}
+
+.invite-glance-download:focus { outline: none; }
+
+.invite-glance-download:focus-visible {
+  outline: 2px solid var(--inv-accent, #d8c08a);
+  outline-offset: 3px;
 }
 
 .invite-glance-hint {

@@ -62,8 +62,10 @@
   // The schedule card comes in two shapes: wide for landscape screens,
   // tall for phones held upright, where the wide card's text is too small.
   var GLANCE = {
-    wide: { img: 'assets/invite/schedule.jpg', ratio: 2000 / 1404, fill: 0.78 },
-    tall: { img: 'assets/invite/schedule_portrait.jpg', ratio: 1000 / 2147, fill: 0.82 }
+    wide: { img: 'assets/invite/schedule.jpg', ratio: 2000 / 1404, fill: 0.75,
+            file: 'Jayant-and-Anjali-Schedule.jpg' },
+    tall: { img: 'assets/invite/schedule_portrait.jpg', ratio: 1000 / 2147, fill: 0.78,
+            file: 'Jayant-and-Anjali-Schedule-Phone.jpg' }
   };
   var ACCENT = '#d8c08a';
 
@@ -84,6 +86,7 @@
   var outro = root.querySelector('.invite-outro');
   var glance = root.querySelector('.invite-glance');
   var glanceCard = root.querySelector('.invite-glance-card');
+  var glanceDownload = root.querySelector('.invite-glance-download');
   var menu = document.getElementById('mobileMenu');
 
   EVENTS.forEach(function (v) {
@@ -237,6 +240,9 @@
     if (glanceShown === g) return;
     glanceShown = g;
     glanceCard.style.backgroundImage = 'url(' + g.img + ')';
+    // the download is whichever card is showing
+    glanceDownload.href = g.img;
+    glanceDownload.setAttribute('download', g.file);
   }
 
   // ----------------------------------------------------------
@@ -565,6 +571,9 @@
     state.glance = true;
     schedule();
   });
+
+  // the download button keeps the card open; anywhere else closes it
+  glanceDownload.addEventListener('pointerup', function (e) { e.stopPropagation(); });
 
   glance.addEventListener('pointerup', function () {
     state.glance = false;
