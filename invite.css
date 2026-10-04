@@ -317,7 +317,7 @@ html.invite-html body {
 .invite-rail[data-mode="none"] { display: none; }
 
 /* ------------------------------------------------------------
-   Intro, outro, dress code
+   Intro, outro, schedule at a glance
    ------------------------------------------------------------ */
 
 .invite-intro,
@@ -483,7 +483,7 @@ html.invite-html body {
   margin-top: clamp(6px, 1.4vh, 14px);
 }
 
-.invite-dress {
+.invite-glance {
   position: absolute;
   inset: 0;
   z-index: 40;
@@ -500,16 +500,16 @@ html.invite-html body {
   touch-action: none;
 }
 
-.invite-dress[hidden] { display: none; }
+.invite-glance[hidden] { display: none; }
 
-.invite-dress-card {
+.invite-glance-card {
   background-size: 100% 100%;
   background-repeat: no-repeat;
   border-radius: 3px;
   box-shadow: 0 34px 80px rgba(20, 10, 6, 0.5);
 }
 
-.invite-dress-hint {
+.invite-glance-hint {
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 10px;

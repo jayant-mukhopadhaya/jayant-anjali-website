@@ -59,11 +59,11 @@
       img: 'assets/invite/sundowner.jpg', back: 'assets/invite/sundowner_back.jpg' }
   ];
 
-  var DRESS_IMG = 'assets/invite/dress_code.jpg';
-  var DRESS_RATIO = 2000 / 1404;
+  var GLANCE_IMG = 'assets/invite/schedule.jpg';
+  var GLANCE_RATIO = 2000 / 1404;
   var ACCENT = '#d8c08a';
 
-  var state = { t: 0, dragging: false, started: false, moved: 0, flipped: {}, dress: false };
+  var state = { t: 0, dragging: false, started: false, moved: 0, flipped: {}, glance: false };
 
   // ----------------------------------------------------------
   // Elements
@@ -78,8 +78,8 @@
   var intro = root.querySelector('.invite-intro');
   var introInner = root.querySelector('.invite-intro-inner');
   var outro = root.querySelector('.invite-outro');
-  var dress = root.querySelector('.invite-dress');
-  var dressCard = root.querySelector('.invite-dress-card');
+  var glance = root.querySelector('.invite-glance');
+  var glanceCard = root.querySelector('.invite-glance-card');
   var menu = document.getElementById('mobileMenu');
 
   EVENTS.forEach(function (v) {
@@ -172,8 +172,8 @@
       state.started = true;
       root.classList.add('has-started');
     }
-    // the dress card belongs to the very end; leaving the end closes it
-    if (state.dress && state.t <= 0.955) state.dress = false;
+    // the schedule card belongs to the very end; leaving the end closes it
+    if (state.glance && state.t <= 0.955) state.glance = false;
     schedule();
   }
 
@@ -203,12 +203,12 @@
     if (v.back) v.backEl.style.backgroundImage = 'url(' + v.back + ')';
   }
 
-  var dressLoaded = false;
+  var glanceLoaded = false;
 
-  function ensureDress() {
-    if (dressLoaded) return;
-    dressLoaded = true;
-    dressCard.style.backgroundImage = 'url(' + DRESS_IMG + ')';
+  function ensureGlance() {
+    if (glanceLoaded) return;
+    glanceLoaded = true;
+    glanceCard.style.backgroundImage = 'url(' + GLANCE_IMG + ')';
   }
 
   // ----------------------------------------------------------
@@ -376,16 +376,16 @@
     outro.style.visibility = outroOn ? 'visible' : 'hidden';
     outro.setAttribute('aria-hidden', outroOn ? 'false' : 'true');
 
-    // ---- dress code ----
-    var dressOn = state.dress && t > 0.955;
-    if (dressOn) {
-      ensureDress();
-      var dw = Math.min(vw * 0.92, vh * 0.78 * DRESS_RATIO, 1100);
-      dressCard.style.width = dw + 'px';
-      dressCard.style.height = (dw / DRESS_RATIO) + 'px';
-      dress.removeAttribute('hidden');
+    // ---- schedule at a glance ----
+    var glanceOn = state.glance && t > 0.955;
+    if (glanceOn) {
+      ensureGlance();
+      var gw = Math.min(vw * 0.92, vh * 0.78 * GLANCE_RATIO, 1100);
+      glanceCard.style.width = gw + 'px';
+      glanceCard.style.height = (gw / GLANCE_RATIO) + 'px';
+      glance.removeAttribute('hidden');
     } else {
-      dress.setAttribute('hidden', '');
+      glance.setAttribute('hidden', '');
     }
   }
 
@@ -451,8 +451,8 @@
       e.preventDefault(); glide(0);
     } else if (k === 'End') {
       e.preventDefault(); glide(1);
-    } else if (k === 'Escape' && state.dress) {
-      state.dress = false; schedule();
+    } else if (k === 'Escape' && state.glance) {
+      state.glance = false; schedule();
     }
   });
 
@@ -492,20 +492,20 @@
     glide(0);
   });
 
-  root.querySelector('[data-action="dress"]').addEventListener('click', function () {
+  root.querySelector('[data-action="glance"]').addEventListener('click', function () {
     if (state.moved >= 8) return;
-    state.dress = true;
+    state.glance = true;
     schedule();
   });
 
-  dress.addEventListener('pointerup', function () {
-    state.dress = false;
+  glance.addEventListener('pointerup', function () {
+    state.glance = false;
     schedule();
   });
 
   // the overlay swallows gestures so the timeline doesn't move behind it
   ['pointerdown', 'pointermove', 'wheel'].forEach(function (type) {
-    dress.addEventListener(type, function (e) {
+    glance.addEventListener(type, function (e) {
       e.stopPropagation();
       if (e.cancelable) e.preventDefault();
     }, { passive: false });
