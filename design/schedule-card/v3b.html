@@ -25,7 +25,7 @@
       position: absolute;
       left: 110px;
       right: 110px;
-      top: 458px;
+      top: 418px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 70px;
@@ -34,7 +34,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      top: 530px;
+      top: 490px;
       height: 4px;
       background: var(--rule);
     }
@@ -42,7 +42,7 @@
       position: absolute;
       left: 110px;
       right: 110px;
-      top: 532px;
+      top: 492px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       column-gap: 70px;
@@ -100,6 +100,17 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       margin-right: 0.35em;
+    }
+    /* a word on dress for the whole weekend, centred beneath the events */
+    .note {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 62px;
+      text-align: center;
+      font-style: italic;
+      font-size: 34px;
+      line-height: 1.3;
     }
   </style>
 </head>
@@ -159,6 +170,8 @@
         <p class="wear"><span class="wear-label">Wear</span>Anything that sparkles, shimmers or shines.</p>
       </div>
     </div>
+
+    <p class="note">We recommend light, breezy attire with comfortable shoes.</p>
   </div>
 </body>
 </html>

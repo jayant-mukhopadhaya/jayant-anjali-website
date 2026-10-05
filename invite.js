@@ -64,7 +64,7 @@
   var GLANCE = {
     wide: { img: 'assets/invite/schedule.jpg', ratio: 2000 / 1404, fill: 0.75,
             file: 'Jayant-and-Anjali-Schedule.jpg' },
-    tall: { img: 'assets/invite/schedule_portrait.jpg', ratio: 1000 / 2147, fill: 0.78,
+    tall: { img: 'assets/invite/schedule_portrait.jpg', ratio: 1000 / 2235, fill: 0.78,
             file: 'Jayant-and-Anjali-Schedule-Phone.jpg' }
   };
   var ACCENT = '#d8c08a';
